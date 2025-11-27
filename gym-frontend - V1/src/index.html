@@ -13,6 +13,22 @@
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 
+
+  <script>
+    window.onerror = function(msg, url, line, col, error) {
+      var e = document.createElement('div');
+      e.style.position = 'fixed';
+      e.style.top = '0';
+      e.style.left = '0';
+      e.style.width = '100%';
+      e.style.background = 'red';
+      e.style.color = 'white';
+      e.style.padding = '20px';
+      e.style.zIndex = '9999';
+      e.innerText = 'Error: ' + msg + '\n' + url + ':' + line + ':' + col + '\n' + (error ? error.stack : '');
+      document.body.appendChild(e);
+    };
+  </script>
 </head>
 <body>
   <app-root></app-root>
