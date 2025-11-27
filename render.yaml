@@ -57,6 +57,5 @@ services:
     name: webgym-frontend
     rootDir: "gym-frontend - V1"
     runtime: static
-    plan: free
     buildCommand: npm install && npm run build
-    staticPublishPath: dist/gym-frontend/browser
+    staticPublishPath: "gym-frontend - V1/dist/gym-frontend/browser"
