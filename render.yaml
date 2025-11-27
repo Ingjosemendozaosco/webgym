@@ -1,11 +1,10 @@
 services:
   - type: web
     name: webgym-backend
-    rootDir: backendgym
-    env: maven
+    runtime: docker
     plan: free
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/backendgym-0.0.1-SNAPSHOT.jar
+    dockerfilePath: backendgym/Dockerfile
+    dockerContext: backendgym
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: production
