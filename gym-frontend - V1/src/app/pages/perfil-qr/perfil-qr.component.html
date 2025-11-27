@@ -1,0 +1,58 @@
+<section class="qr-page">
+  <div class="qr-container">
+    <header class="qr-header">
+      <h1>Mi código QR</h1>
+      <p *ngIf="nombre || apellido" class="qr-subtitle">{{nombre}} {{apellido}}</p>
+    </header>
+
+    <div class="qr-layout" *ngIf="qrImageUrl; else noQr">
+      <div class="qr-info-panel">
+        <h2 class="qr-info-title">Estado de tu visita 📍</h2>
+        <div class="qr-status">
+          <ng-container [ngSwitch]="estadoActual">
+            <p *ngSwitchCase="'DENTRO'" class="qr-status-text dentro">
+              <span class="qr-status-label">Tu estado actual:</span>
+              <span class="qr-status-badge qr-status-badge--in">🏋️‍♂️ Dentro del gimnasio</span>
+              <span class="qr-status-note" *ngIf="ultimaAsistencia?.fechaHora">
+                desde {{ ultimaAsistencia?.fechaHora | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            </p>
+            <p *ngSwitchCase="'FUERA'" class="qr-status-text fuera">
+              <span class="qr-status-label">Tu estado actual:</span>
+              <span class="qr-status-badge qr-status-badge--out">🚪 Fuera del gimnasio</span>
+              <span class="qr-status-note" *ngIf="ultimaAsistencia?.fechaHora">
+                última salida {{ ultimaAsistencia?.fechaHora | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            </p>
+            <p *ngSwitchDefault class="qr-status-text vacio">
+              Aún no registras entradas o salidas en el sistema.
+            </p>
+          </ng-container>
+        </div>
+
+        <div class="qr-concurrencia" *ngIf="personasDentro !== null">
+          <div class="qr-concurrencia-label">Personas dentro del gimnasio ahora 🧍‍♂️🧍‍♀️</div>
+          <div class="qr-concurrencia-value" [ngClass]="{
+            'low': personasDentro <= 15,
+            'medium': personasDentro > 15 && personasDentro <= 25,
+            'high': personasDentro > 25
+          }">{{ personasDentro }}</div>
+          <div class="qr-concurrencia-note">⚡ Basado en el último check-in de cada usuario.</div>
+        </div>
+      </div>
+
+      <div class="qr-card">
+        <img [src]="qrImageUrl" alt="Mi código QR" width="380" height="380" />
+        <p class="qr-hint">Muestra este código en recepción para registrar tu entrada o salida.</p>
+      </div>
+    </div>
+
+    <ng-template #noQr>
+      <div class="qr-card empty">
+        <p>No se encontró un código QR para tu cuenta.</p>
+      </div>
+    </ng-template>
+
+    <button class="qr-back" type="button" (click)="volverPerfil()">Volver al perfil</button>
+  </div>
+</section>

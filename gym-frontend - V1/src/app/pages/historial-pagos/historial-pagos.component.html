@@ -1,0 +1,57 @@
+<section class="page historial historial-pagos">
+  <header class="head">
+    <h1>Historial de pagos</h1>
+    <p class="muted">Todos los pedidos asociados a tu cuenta.</p>
+    <a routerLink="/perfil" class="back">← Volver al perfil</a>
+  </header>
+
+  <div *ngIf="cargando" class="muted">Cargando…</div>
+
+  <div *ngIf="!cargando && !pedidos?.length" class="empty">
+    No tienes pagos registrados.
+  </div>
+
+  <div class="cards" *ngIf="!cargando && pedidos?.length">
+    <article class="card" *ngFor="let p of pedidos" [ngClass]="'status-' + (p._estadoKey || 'otro')">
+      <div class="card-inner">
+        <div class="thumb">
+          <img [src]="p._thumb || p._img || defaultImg" [alt]="p._titulo || 'Producto'" loading="lazy" />
+        </div>
+        <div class="body">
+          <div class="row-top">
+            <span class="chip">#{{ p.id }}</span>
+            <span class="date">{{ p.fechaPedido || p.fecha | date:'short' }}</span>
+          </div>
+          <div class="row-main">
+            <div>
+              <div class="label">Total pagado</div>
+              <div class="amount">S/ {{ p.total | number:'1.2-2' }}</div>
+              <div class="label extra" *ngIf="p._cantidad">
+                {{ p._cantidad }} {{ p._cantidad === 1 ? 'artículo' : 'artículos' }}
+              </div>
+            </div>
+            <div class="status">
+              <span class="badge">{{ p.estado }}</span>
+            </div>
+          </div>
+          <div class="row-actions">
+            <button class="btn-link" type="button" (click)="p._show = !p._show">
+              {{ p._show ? 'Ver menos' : 'Ver más' }}
+            </button>
+          </div>
+          <div class="row-details" *ngIf="p._show && (p.detalles || p.detallePedidos)">
+            <ul>
+              <li *ngFor="let d of (p.detalles || p.detallePedidos)">
+                <span class="prod-name">{{ d.producto?.nombre || d.product?.nombre || 'Producto' }}</span>
+                <span class="prod-qty">× {{ d.cantidad }}</span>
+                <span class="prod-price">
+                  S/ {{ (d.subtotal || (d.precioUnitario * d.cantidad)) | number:'1.2-2' }}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

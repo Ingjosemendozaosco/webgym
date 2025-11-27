@@ -1,0 +1,68 @@
+<section class="crud-page">
+  <div class="crud-page__container">
+    <app-admin-nav></app-admin-nav>
+
+    <header class="crud-header">
+      <div class="crud-header__title">
+        <h1>Pedidos</h1>
+        <p class="crud-header__subtitle">Monitorea el estado global de pedidos y resuelve incidencias rápidamente.</p>
+      </div>
+      <div class="crud-header__actions">
+        <button class="crud-button" type="button" (click)="buscar(page)">Actualizar</button>
+      </div>
+    </header>
+
+    <div class="crud-card crud-card--filters">
+      <div class="crud-toolbar">
+        <label class="crud-pill" *ngFor="let e of ['RECHAZADO','REVISION']">
+          <input type="checkbox" [checked]="selected.has(e)" (change)="toggleEstado(e)"> {{e}}
+        </label>
+      </div>
+      <div class="crud-spacer"></div>
+      <button class="crud-button" type="button" (click)="buscar(0)">Aplicar filtros</button>
+    </div>
+
+    <div class="crud-card crud-card--table" *ngIf="!cargando">
+      <div class="crud-scroll">
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Total</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of (data?.content || [])">
+              <td data-label="ID">{{p.id}}</td>
+              <td data-label="Usuario" class="crud-ellipsis">{{p.usuario?.email || p.usuarioId || '—'}}</td>
+              <td data-label="Fecha">{{p.fechaPedido | date:'short'}}</td>
+              <td data-label="Estado">
+                <span class="crud-badge is-muted">{{p.estado}}</span>
+              </td>
+              <td data-label="Total">{{p.total | currency:'PEN':'symbol-narrow'}}</td>
+              <td data-label="Acciones" class="crud-toolbar">
+                <button class="crud-button is-danger" type="button" [disabled]="p.estado==='ANULADO'" (click)="anular(p)">Anular</button>
+              </td>
+            </tr>
+            <tr *ngIf="(data?.content||[]).length===0">
+              <td colspan="6" class="crud-empty">Sin resultados.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="crud-pager" *ngIf="pageCount()>1">
+        <button class="crud-button" [disabled]="!canPrev()" (click)="buscar(page-1)">Anterior</button>
+        <span>Página {{(data?.number||0)+1}} / {{pageCount()}}</span>
+        <button class="crud-button" [disabled]="!canNext()" (click)="buscar(page+1)">Siguiente</button>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="crud-card crud-empty">Cargando…</div>
+
+    <div *ngIf="toast" class="crud-toast">{{toast}}</div>
+  </div>
+</section>

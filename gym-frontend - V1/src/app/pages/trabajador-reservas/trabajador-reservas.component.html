@@ -1,0 +1,74 @@
+<section class="crud-page">
+  <div class="crud-page__container">
+    <app-trabajador-nav></app-trabajador-nav>
+
+    <header class="crud-header">
+      <div class="crud-header__title">
+        <h1>Reservaciones</h1>
+        <p class="crud-header__subtitle">Gestiona las reservas realizadas sobre productos y membresías.</p>
+      </div>
+      <div class="crud-header__actions">
+        <button class="crud-button" type="button" (click)="buscar(page)">Actualizar</button>
+      </div>
+    </header>
+
+    <div class="crud-card crud-card--filters">
+      <label class="crud-filter">
+        <span>Estado</span>
+        <select class="crud-control" [(ngModel)]="estado" (change)="buscar(0)">
+          <option value="">Todos</option>
+          <option *ngFor="let e of estados" [value]="e">{{e}}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="crud-card crud-card--table" *ngIf="!cargando">
+      <div class="crud-scroll">
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Recurso</th>
+              <th>Fecha</th>
+              <th>Duración</th>
+              <th>Estado</th>
+              <th>Cambiar estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of (data?.content || [])">
+              <td data-label="ID">{{r.id}}</td>
+              <td data-label="Usuario" class="crud-ellipsis">{{r.usuario?.email || r.usuarioId || '—'}}</td>
+              <td data-label="Recurso" class="crud-ellipsis">{{r.producto?.nombre || r.membresia?.nombre || '—'}}</td>
+              <td data-label="Fecha">{{r.fecha | date:'short'}}</td>
+              <td data-label="Duración">{{r.duracionMinutos}} min</td>
+              <td data-label="Estado">
+                <span class="crud-badge" [ngClass]="estadoClase(r.estado)">{{r.estado}}</span>
+              </td>
+              <td data-label="Cambiar estado">
+                <div class="crud-toolbar">
+                  <select class="crud-control" [(ngModel)]="r._nuevoEstado">
+                    <option *ngFor="let e of estados" [value]="e">{{e}}</option>
+                  </select>
+                  <button class="crud-button is-primary" type="button" [disabled]="r._nuevoEstado===r.estado" (click)="cambiarEstado(r, r._nuevoEstado)">Aplicar</button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="(data?.content||[]).length===0">
+              <td colspan="7" class="crud-empty">Sin reservaciones para los filtros.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="crud-pager" *ngIf="pageCount()>1">
+        <button class="crud-button" [disabled]="!canPrev()" (click)="buscar(page-1)">Anterior</button>
+        <span>Página {{(data?.number||0)+1}} / {{pageCount()}}</span>
+        <button class="crud-button" [disabled]="!canNext()" (click)="buscar(page+1)">Siguiente</button>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="crud-card crud-empty">Cargando…</div>
+    <div *ngIf="toast" class="crud-toast">{{toast}}</div>
+  </div>
+</section>

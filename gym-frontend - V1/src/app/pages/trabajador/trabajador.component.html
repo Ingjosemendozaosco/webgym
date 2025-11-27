@@ -1,0 +1,183 @@
+<div class="dashboard-container">
+  <div class="header-row">
+    <div>
+      <h1>Panel de Trabajador</h1>
+      <p class="subtitle">Operaciones diarias del gimnasio</p>
+    </div>
+    <div class="actions">
+      <button class="logout-btn" (click)="cerrarSesion()">
+        <span class="icon">⎋</span>
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+
+  <!-- Inicio simple (sin accesos directos) -->
+  <section class="worker-hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h2>Panel de operaciones</h2>
+        <p class="muted">Resumen de actividad reciente.</p>
+      </div>
+      <div class="hero-emoji">💼</div>
+    </div>
+  </section>
+
+  <!-- Modal Detalle Pedido -->
+  <div class="modal-backdrop" *ngIf="detalleAbierto" (click)="cerrarDetalle()"></div>
+  <div class="modal" *ngIf="detalleAbierto">
+    <div class="modal-header">
+      <h3>Detalle del pedido #{{pedidoSeleccionado?.id}}</h3>
+      <button class="close" (click)="cerrarDetalle()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="pedidoSeleccionado?.detalles?.length; else noItems">
+        <div class="detalle-item" *ngFor="let d of pedidoSeleccionado.detalles">
+          <div class="name">{{d.productoNombre || 'Item'}}</div>
+          <div class="qty">x{{d.cantidad}}</div>
+          <div class="sub">{{formatearMoneda(d.subtotal || 0)}}</div>
+        </div>
+      </div>
+      <ng-template #noItems>
+        <div class="muted">Sin items</div>
+      </ng-template>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="cerrarDetalle()">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Se removieron accesos rápidos para enfocar solo en datos -->
+
+  <!-- Estadísticas compactas -->
+  <section class="worker-stats" *ngIf="!cargando && !error">
+    <a class="stat-card" routerLink="/trabajador/pedidos">
+      <div class="stat-icon">🛍️</div>
+      <div class="stat-info">
+        <div class="stat-value">{{pedidos.length || 0}}</div>
+        <div class="stat-label">Pedidos recientes</div>
+      </div>
+    </a>
+    <a class="stat-card" routerLink="/trabajador/reservas">
+      <div class="stat-icon">📅</div>
+      <div class="stat-info">
+        <div class="stat-value">{{reservacionesPendientes.length}}</div>
+        <div class="stat-label">Reservas pendientes</div>
+      </div>
+    </a>
+    <a class="stat-card" routerLink="/trabajador/membresias">
+      <div class="stat-icon">🪪</div>
+      <div class="stat-info">
+        <div class="stat-value">{{membresiasPendientes.length}}</div>
+        <div class="stat-label">Membresías por aprobar</div>
+      </div>
+    </a>
+    <a class="stat-card" routerLink="/trabajador/planes">
+      <div class="stat-icon">🔁</div>
+      <div class="stat-info">
+        <div class="stat-value">{{planesPendientes.length}}</div>
+        <div class="stat-label">Planes por aprobar</div>
+      </div>
+    </a>
+    <a class="stat-card" routerLink="/promociones">
+      <div class="stat-icon">🏷️</div>
+      <div class="stat-info">
+        <div class="stat-value">—</div>
+        <div class="stat-label">Promociones</div>
+      </div>
+    </a>
+    <a class="stat-card" routerLink="/trabajador/soporte">
+      <div class="stat-icon">🎧</div>
+      <div class="stat-info">
+        <div class="stat-value">—</div>
+        <div class="stat-label">Soporte</div>
+      </div>
+    </a>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-info">
+        <div class="stat-value">{{ formatearMoneda(gananciaHoy) }}</div>
+        <div class="stat-label">Ganancia del día</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gestión de pedidos (abajo) -->
+  <section class="worker-section" *ngIf="!cargando && !error">
+    <h2>Pedidos</h2>
+    <div class="muted" style="margin: 6px 0 8px;">
+      Mostrando últimos 10 pedidos recientes.
+    </div>
+    <div class="filters">
+      <label>
+        Estado pedido:
+        <select [(ngModel)]="filtroEstado" (change)="cargarPedidos()">
+          <option value="">Todos</option>
+          <option>PENDIENTE</option>
+          <option>CONFIRMADO</option>
+          <option>RECHAZADO</option>
+          <option>CANCELADO</option>
+        </select>
+      </label>
+      <button class="btn-outline" (click)="cargarPedidos()">Actualizar</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Total</th>
+            <th>Detalle</th>
+            <th>Estado</th>
+            <th>Método</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of pedidos">
+            <td>{{p.id}}</td>
+            <td>{{p.usuarioNombre || p.usuarioEmail || p.usuarioId || '—'}}</td>
+            <td>{{formatearMoneda(p.total)}}</td>
+            <td>
+              <button class="btn-small" (click)="verMas(p)">Ver más</button>
+            </td>
+            <td>
+              <span [ngClass]="estadoPedidoClase(p.estado)">{{p.estado}}</span>
+            </td>
+            <td>{{p.metodoPago}}</td>
+            <td>
+              <div>{{formatearFecha(p.fechaPedido)}}</div>
+              <div class="muted" *ngIf="p.fechaConfirmacion">Conf: {{formatearFecha(p.fechaConfirmacion)}}</div>
+            </td>
+            <td>
+              <ng-container [ngSwitch]="p.estado">
+                <button *ngSwitchCase="'PENDIENTE'" class="btn-small" (click)="confirmar(p)">Confirmar</button>
+                <button *ngSwitchCase="'CONFIRMADO'" class="btn-small danger" (click)="cancelar(p)">Cancelar</button>
+                <button *ngSwitchCase="'CANCELADO'" class="btn-small danger" (click)="eliminar(p)">Eliminar</button>
+                <span *ngSwitchDefault class="muted">—</span>
+              </ng-container>
+            </td>
+          </tr>
+          <tr *ngIf="(pedidos?.length||0)===0">
+            <td colspan="8" class="muted">No hay pedidos para los filtros seleccionados.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="loading-section" *ngIf="cargando">
+    <div class="spinner"></div>
+    <p>Cargando información...</p>
+  </div>
+
+  <div class="error-message" *ngIf="error && !cargando">
+    <p>{{error}}</p>
+    <button class="btn-retry">Reintentar</button>
+  </div>
+
+  <!-- (Se movieron Acciones rápidas y Estadísticas arriba) -->
+</div>

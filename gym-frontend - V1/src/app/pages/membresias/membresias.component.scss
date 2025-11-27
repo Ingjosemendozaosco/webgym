@@ -1,0 +1,189 @@
+/* ===== Tema Hero + Cards doradas ===== */
+.page.members-hero{
+  --ink:#0f172a;
+  --muted:#667085;
+  --line:#e6e9ef;
+  --bg:#f7f8fb;
+  --white:#fff;
+  --red:#d32f2f;
+  --red-700:#b71c1c;
+  --gold:#f6c76b;           /* dorado suave */
+  --gold-600:#e6b44f;
+
+  background: var(--bg);
+  font-family: "League Spartan", system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
+}
+
+/* HERO con imagen de Cloudinary */
+.hero{
+  position: relative;
+  background: #0b1220 url('https://res.cloudinary.com/dyivnbh3x/image/upload/v1762463454/sdds-min_cdaacn.jpg') center/cover no-repeat;
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+}
+.hero::after{
+  /* oscurecer para mejor contraste del título */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.45));
+}
+.hero__inner{
+  position: relative; text-align: center; padding: 24px 16px; color: #fff;
+}
+.hero__inner h1{
+  margin: 0 0 8px; font-size: clamp(1.8rem, 1.2rem + 1.6vw, 2.4rem); font-weight: 900;
+}
+.hero__inner p{
+  margin: 0; font-weight: 600; opacity: .95;
+}
+
+.page.members-hero .container{ max-width:1180px; margin:0 auto; padding:16px 20px 56px; }
+
+/* Nota */
+.info-banner{
+  margin: 18px 0; padding: 10px 12px;
+  border:1px solid #fde6d9; background:#fff7f3; border-radius: 12px;
+  color:#8a2c0f; font-weight: 800;
+}
+
+/* GRID 3 columnas */
+.grid{
+  display:grid; gap: 22px;
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width:1100px){ .grid{ grid-template-columns: repeat(2, 1fr);} }
+@media (max-width:720px){  .grid{ grid-template-columns: 1fr;} }
+
+/* ===== Tarjeta dorada ===== */
+.goldcard{
+  background: var(--white);
+  border-radius: 18px;
+  border: 2px solid rgba(246,199,107,.55);       /* borde dorado translúcido */
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  padding: 18px;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.goldcard:hover{
+  transform: translateY(-4px);
+  border-color: var(--gold);
+  box-shadow: 0 16px 40px rgba(0,0,0,.10);
+}
+.goldcard.disabled{
+  opacity:.6; filter: grayscale(.1);
+  pointer-events: none;
+}
+
+/* Head */
+.goldcard__head{ text-align:center; }
+.goldcard__title{ margin:0 0 6px; font-size:1.25rem; font-weight:900; color: var(--ink); }
+.goldcard__muted{ margin:0; color:#475467; font-weight:600; }
+
+.rating{
+  margin-top:6px;
+  display:flex;
+  justify-content:center;
+  gap:4px;
+  font-size:.85rem;
+  color:var(--muted);
+}
+.rating span:first-child{
+  font-weight:800;
+  color:#f59e0b;
+}
+.rating-count{
+  color:#94a3b8;
+}
+
+/* Lista de beneficios */
+.goldcard__list{
+  list-style:none; margin:14px 0 0; padding:0; display:grid; gap:8px;
+}
+.goldcard__list li{
+  position:relative; padding-left:28px; color:#334155; font-weight:700; line-height:1.2;
+}
+.goldcard__list li::before{
+  content:""; position:absolute; left:0; top:2px;
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid var(--gold-600); background:#fff;
+}
+
+/* Precio */
+.goldcard__price{
+  margin-top:14px; display:grid; gap:6px; text-align:center;
+}
+.goldcard .old{ color:#98a2b3; text-decoration: line-through; font-weight:800; }
+.goldcard .now{ display:flex; gap:8px; align-items:baseline; justify-content:center; }
+.goldcard .amount{ font-size:1.6rem; font-weight:900; color:var(--ink); }
+.goldcard .per{ color:#98a2b3; font-weight:800; }
+
+/* CTA */
+.goldcard__cta{
+  margin-top:14px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;
+}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; height:44px;
+  border-radius: 999px; font-weight:900; cursor:pointer; border:1px solid #e6e9ef; background:#fff; color:var(--ink);
+}
+.btn.primary{
+  background: var(--red); border-color: var(--red); color:#fff;
+  box-shadow: 0 8px 18px rgba(211,47,47,.18);
+}
+.btn.primary:hover{ background: var(--red-700); border-color: var(--red-700); }
+.btn.ghost:hover{ border-color: var(--red); color: var(--red); }
+
+/* ===== Modal mínimo (reutiliza tus estructuras) ===== */
+.modal{ position:fixed; inset:0; background:rgba(15,23,42,.45); display:grid; place-items:center; padding:16px; z-index:1000; }
+.modal-card{
+  width:min(980px,96vw); background:#fff; border-radius:16px; overflow:hidden;
+  display:grid; grid-template-columns: 1fr 1.1fr; border:1px solid #e6e9ef; box-shadow:0 24px 60px rgba(0,0,0,.18);
+}
+.modal-hero{ background:#f7f8fb; display:grid; place-items:center; padding:22px; border-right:1px solid #e6e9ef; }
+.modal-hero img{ width:min(320px,80%); height:auto; object-fit:contain; }
+.modal-info{ padding:18px; display:grid; gap:12px; color:var(--ink); }
+.alert{ background:#fff7f3; border:1px solid #fde6d9; border-radius:10px; padding:8px 10px; color:#9a3412; font-weight:800; }
+.cols{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.cols ul{ margin:0; padding-left:18px; }
+.price--modal{ padding:0; }
+.modal-info .old{ color:#98a2b3; text-decoration: line-through; font-weight:800; }
+.modal-info .now{ display:flex; gap:8px; align-items:baseline; }
+.modal-info .amount{ font-size:1.5rem; font-weight:900; }
+.modal-info .per{ color:#98a2b3; font-weight:800; }
+.actions{ display:flex; gap:10px; }
+.modal-info .btn.primary{ background:var(--red); border-color:var(--red); color:#fff; }
+.modal-info .btn.primary:hover{ background:var(--red-700); border-color:var(--red-700); }
+.modal-info.full{ grid-column:1 / -1; }
+@media (max-width:920px){
+  .modal-card{ grid-template-columns: 1fr; }
+  .modal-hero{ border-right:0; border-bottom:1px solid #e6e9ef; }
+}
+
+.rating-form{
+  margin-top:8px;
+  display:grid;
+  gap:6px;
+  border-top:1px solid #e6e9ef;
+  padding-top:8px;
+}
+.rating-form label{
+  font-weight:800;
+  font-size:.85rem;
+  color:var(--muted);
+}
+.rating-form textarea{
+  resize:vertical;
+  min-height:48px;
+  border-radius:10px;
+  border:1px solid #e6e9ef;
+  padding:6px 8px;
+  font-family:inherit;
+  font-size:.85rem;
+}
+
+/* Toast */
+.toast.success{
+  position:fixed; right:16px; bottom:16px;
+  background:#d1fae5; color:#065f46; border:1px solid #a7f3d0;
+  padding:.75rem 1rem; border-radius:.75rem; box-shadow:0 8px 24px rgba(0,0,0,.12); font-weight:700;
+}

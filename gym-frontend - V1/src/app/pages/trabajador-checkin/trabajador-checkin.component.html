@@ -1,0 +1,89 @@
+<section class="crud-page">
+  <div class="crud-page__container">
+    <app-trabajador-nav></app-trabajador-nav>
+
+    <header class="crud-header">
+      <div class="crud-header__title">
+        <h1>Escanear QR</h1>
+        <p class="crud-header__subtitle">Usa la cámara para registrar entradas y salidas de los usuarios.</p>
+      </div>
+      <div class="crud-header__actions">
+        <button class="crud-button" type="button" (click)="cancelarEscaneo()">Cancelar escaneo</button>
+        <button class="crud-button" type="button" (click)="reintentar()">Reiniciar cámara</button>
+      </div>
+    </header>
+
+    <div class="crud-card crud-card--scanner">
+      <div class="scanner-layout">
+        <div class="scanner-preview">
+          <div class="video-wrapper">
+            <video #video autoplay playsinline muted></video>
+            <div class="scanner-frame" *ngIf="!error"></div>
+          </div>
+          <canvas #canvas class="hidden-canvas"></canvas>
+
+          <div class="scanner-status" *ngIf="cargandoCamara">
+            <div class="spinner"></div>
+            <p>Activando cámara…</p>
+          </div>
+          <div class="scanner-status error" *ngIf="error && !cargandoCamara">
+            <p>{{error}}</p>
+          </div>
+        </div>
+
+        <div class="scanner-info">
+          <h3>Resultado</h3>
+          <div *ngIf="resultado; else noResult" class="result-card">
+            <div class="result-card__header">
+              <span class="result-card__label">Último escaneo</span>
+              <span class="badge" [ngClass]="resultado?.tipo === 'ENTRADA' ? 'badge--in' : 'badge--out'">
+                {{resultado?.tipo}}
+              </span>
+            </div>
+            <div class="result-card__body">
+              <p class="result-user">{{resultado?.nombreCompleto || ('ID usuario: ' + resultado?.usuarioId)}}</p>
+              <p class="result-date">{{resultado?.fechaHora | date:'dd/MM/yyyy HH:mm'}}</p>
+            </div>
+            <p class="result-hint">Listo, el escáner se reinicia en 10 segundos…</p>
+          </div>
+          <ng-template #noResult>
+            <p class="hint">Apunta la cámara al código QR del usuario para registrar la entrada o salida.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <div class="crud-card crud-card--usuarios">
+      <div class="usuarios-resumen">
+        <div class="usuarios-resumen__header">
+          <h3>Usuarios asistiendo</h3>
+          <p class="usuarios-resumen__subtitle">Estado actual y días de asistencia por usuario.</p>
+        </div>
+
+        <div *ngIf="!usuariosResumen?.length" class="usuarios-empty">
+          Aún no hay asistencias registradas.
+        </div>
+
+        <div *ngIf="usuariosResumen?.length" class="usuarios-table">
+          <div class="usuarios-table__head">
+            <span>Usuario</span>
+            <span>Estado</span>
+            <span>Semana</span>
+            <span>Mes</span>
+          </div>
+          <div class="usuarios-table__body">
+            <div *ngFor="let u of usuariosResumen" class="usuarios-table__row">
+              <span class="usuario-nombre">{{ u.nombreCompleto || ('Usuario #' + u.usuarioId) }}</span>
+              <span class="usuario-estado" [ngClass]="{
+                'in': u.estadoActual === 'ENTRADA',
+                'out': u.estadoActual === 'SALIDA',
+                'none': u.estadoActual === 'SIN_REGISTROS'
+              }">{{ u.estadoActual === 'ENTRADA' ? 'Entrada' : (u.estadoActual === 'SALIDA' ? 'Salida' : 'Sin registros') }}</span>
+              <span class="usuario-dia">{{ u.diasSemana }}</span>
+              <span class="usuario-dia">{{ u.diasMes }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,94 @@
+<section class="crud-page">
+  <div class="crud-page__container">
+    <app-admin-nav></app-admin-nav>
+
+    <header class="crud-header">
+      <div class="crud-header__title">
+        <h1>Usuarios</h1>
+        <p class="crud-header__subtitle">Gestiona cuentas, roles y el estado de acceso del personal.</p>
+      </div>
+      <div class="crud-header__actions">
+        <button class="crud-button" type="button" (click)="buscar(page)">Actualizar lista</button>
+      </div>
+    </header>
+
+    <div class="crud-card crud-card--filters">
+      <input
+        class="crud-control"
+        type="search"
+        placeholder="Buscar por email, nombre o apellido"
+        [(ngModel)]="q"
+        (keyup.enter)="buscar(0)"
+      />
+      <select class="crud-control" [(ngModel)]="rol" (change)="buscar(0)">
+        <option value="">Todos los roles</option>
+        <option *ngFor="let r of roles" [value]="r">{{r}}</option>
+      </select>
+      <select class="crud-control" [(ngModel)]="activo" (change)="buscar(0)">
+        <option value="">Todos los estados</option>
+        <option value="true">Activos</option>
+        <option value="false">Bloqueados</option>
+      </select>
+      <div class="crud-spacer"></div>
+      <button class="crud-button is-primary" type="button" (click)="buscar(0)">Buscar</button>
+      <button class="crud-button is-ghost" type="button" (click)="resetFilters()">Limpiar</button>
+    </div>
+
+    <div class="crud-card crud-card--table" *ngIf="!cargando">
+      <div class="crud-scroll">
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Nombre</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of (data?.content || [])">
+              <td data-label="ID">{{u.id}}</td>
+              <td data-label="Email" class="crud-ellipsis">{{u.email}}</td>
+              <td data-label="Nombre" class="crud-ellipsis">{{u.nombre}} {{u.apellido}}</td>
+              <td data-label="Rol">
+                <ng-container *ngIf="u.rol === 'ADMIN'; else editableRol">
+                  <span class="crud-badge is-muted">ADMIN</span>
+                </ng-container>
+                <ng-template #editableRol>
+                  <select class="crud-control" [ngModel]="u.rol" (ngModelChange)="setRol(u, $event)">
+                    <option *ngFor="let r of selectionRoles" [value]="r">{{r}}</option>
+                  </select>
+                </ng-template>
+              </td>
+              <td data-label="Estado">
+                <span
+                  class="crud-badge"
+                  [ngClass]="{ 'is-success': isActivo(u), 'is-muted': !isActivo(u) }"
+                >
+                  {{estadoLabel(u)}}
+                </span>
+              </td>
+              <td data-label="Acciones" class="crud-toolbar">
+                <button class="crud-button" type="button" (click)="toggleActivo(u)">{{toggleLabel(u)}}</button>
+              </td>
+            </tr>
+            <tr *ngIf="(data?.content||[]).length===0">
+              <td colspan="6" class="crud-empty">Sin resultados.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="crud-pager" *ngIf="pageCount()>1">
+        <button class="crud-button" [disabled]="!canPrev()" (click)="buscar(page-1)">Anterior</button>
+        <span>Página {{(data?.number||0)+1}} / {{pageCount()}}</span>
+        <button class="crud-button" [disabled]="!canNext()" (click)="buscar(page+1)">Siguiente</button>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="crud-card crud-empty">Cargando…</div>
+
+    <div *ngIf="toast" class="crud-toast">{{toast}}</div>
+  </div>
+</section>

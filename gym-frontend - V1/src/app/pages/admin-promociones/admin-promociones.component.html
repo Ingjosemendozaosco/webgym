@@ -1,0 +1,129 @@
+<app-admin-nav></app-admin-nav>
+<section class="page admin-promos">
+  <header class="head">
+    <h1>Promociones</h1>
+    <div class="actions">
+      <label><input type="checkbox" [(ngModel)]="soloActivas" (change)="buscar()"> Solo activas</label>
+      <button class="btn" (click)="nuevo()">Nueva promoción</button>
+    </div>
+  </header>
+
+  <p class="muted" *ngIf="cargando">Cargando promociones...</p>
+  <p class="muted" *ngIf="!cargando && (!data || data.length===0)">No hay promociones para mostrar.</p>
+
+  <div class="grid" *ngIf="!cargando && data && data.length">
+    <div class="card" *ngFor="let p of data">
+      <div class="row">
+        <span class="badge tipo">{{p.tipo}}</span>
+        <span class="badge pct">-{{p.descuentoPorcentaje}}%</span>
+        <span class="badge estado" [class.on]="p.activo" [class.off]="!p.activo">{{p.activo ? 'ACTIVA' : 'INACTIVA'}}</span>
+      </div>
+      <h3>{{p.titulo}}</h3>
+      <p class="muted">{{p.descripcion}}</p>
+      <div class="meta">
+        <span *ngIf="p.evento" class="chip">Evento: {{p.evento}}</span>
+        <span *ngIf="p.categoria" class="chip">Categoría: {{p.categoria}}</span>
+        <span class="chip">Inicio: {{p.fechaInicio | date:'short'}}</span>
+        <span class="chip">Fin: {{p.fechaFin ? (p.fechaFin | date:'short') : 'sin fin'}}</span>
+      </div>
+      <div>
+        <ng-container *ngIf="p.productos?.length; else sinProductos">
+          <div class="prods">
+            <div class="prod" *ngFor="let prod of p.productos">
+              <ng-container *ngIf="prod.imagen; else noimg">
+                <img [src]="prod.imagen" alt="{{prod.nombre}}" />
+              </ng-container>
+              <ng-template #noimg>
+                <div class="img-fallback">{{ (prod.nombre||'').slice(0,1) || 'P' }}</div>
+              </ng-template>
+              <div class="info">
+                <div class="name">{{prod.nombre}}</div>
+                <div class="meta">#{{prod.id}} · {{prod.categoria || 'Sin categoría'}}</div>
+                <div class="price">S/{{prod.precio}}</div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #sinProductos>
+          <span class="chip muted">Sin productos asociados</span>
+        </ng-template>
+      </div>
+      <div class="row actions">
+        <button (click)="editar(p)">Editar</button>
+        <button class="danger" (click)="eliminar(p)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" *ngIf="toast">{{toast}}</div>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="modal">
+    <div class="modal-card">
+      <h2>{{editingId ? 'Editar promoción' : 'Nueva promoción'}}</h2>
+      <div class="form">
+        <label>Título
+          <input [(ngModel)]="f.titulo" placeholder="Título" />
+        </label>
+        <label>Descripción
+          <textarea [(ngModel)]="f.descripcion" rows="3" placeholder="Descripción"></textarea>
+        </label>
+        <div class="cols">
+          <label>Tipo
+            <select [(ngModel)]="f.tipo">
+              <option value="GENERAL">GENERAL</option>
+              <option value="PRODUCTO">PRODUCTO</option>
+              <option value="RESERVA">RESERVA</option>
+            </select>
+          </label>
+          <label>% Descuento
+            <input type="number" min="0" max="100" [(ngModel)]="f.descuentoPorcentaje" />
+          </label>
+          <label>Activo
+            <input type="checkbox" [(ngModel)]="f.activo" />
+          </label>
+        </div>
+        <div class="cols">
+          <label>Inicio
+            <input type="datetime-local" [(ngModel)]="f.fechaInicio" />
+          </label>
+          <label>Fin
+            <input type="datetime-local" [(ngModel)]="f.fechaFin" />
+          </label>
+        </div>
+        <div class="cols">
+          <label>Evento
+            <input [(ngModel)]="f.evento" placeholder="Black Friday, etc" />
+          </label>
+          <label>Categoría
+            <input [(ngModel)]="f.categoria" placeholder="Equipos, Ropa, etc" />
+          </label>
+        </div>
+        <div class="cols">
+          <div>
+            <label>Buscar productos
+              <input [(ngModel)]="prodQuery" (input)="buscarProductos()" placeholder="Nombre / descripción" />
+            </label>
+            <div class="results" *ngIf="prodResults?.length">
+              <div class="result" *ngFor="let pr of prodResults" (click)="toggleProducto(pr)" [class.selected]="isSelected(pr)">
+                <span class="name">{{pr.nombre}}</span>
+                <span class="meta">#{{pr.id}} · {{pr.categoria}} · S/{{pr.precio}}</span>
+                <span class="add">{{ isSelected(pr) ? 'Quitar' : 'Agregar' }}</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label>Productos seleccionados</label>
+            <div class="chips">
+              <span class="chip" *ngFor="let sp of selectedProducts" (click)="toggleProducto(sp)">{{sp.nombre}} (#{{sp.id}}) ✕</span>
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button (click)="guardar()">Guardar</button>
+          <button class="ghost" (click)="modal=false">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

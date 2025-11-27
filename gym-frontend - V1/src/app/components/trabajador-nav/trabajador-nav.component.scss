@@ -1,0 +1,6 @@
+.worker-nav { display:flex; gap:.6rem; align-items:center; border:1px solid #eef2f7; border-radius:.75rem; background:#fff; box-shadow: 0 8px 22px rgba(0,0,0,.06); padding:.4rem .5rem; }
+.worker-nav a { padding:.35rem .6rem; border-radius:.55rem; color:#0f172a; font-weight:800; text-decoration:none; }
+.worker-nav a.active { background:#f1f5f9; }
+.worker-nav .spacer { flex: 1; }
+.worker-nav .pill { padding:.35rem .6rem; border:1px solid #e5e7eb; border-radius:999px; font-weight:800; }
+.worker-nav .pill.danger { background:#ef4444; color:#fff; border-color:#dc2626; }

@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.crud-card select.crud-control {
+  min-width: 180px;
+}
+
+.crud-toolbar {
+  justify-content: flex-start;
+}

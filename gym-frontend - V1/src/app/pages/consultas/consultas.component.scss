@@ -1,0 +1,168 @@
+/* ====== Paleta y base ====== */
+.page.consultas-red{
+  --red:#d32f2f;        /* principal */
+  --red-700:#b71c1c;    /* hover */
+  --ink:#111827;        /* texto */
+  --muted:#667085;      /* texto tenue */
+  --line:#e6e9ef;       /* línea clara */
+  --bg:#f7f8fb;         /* fondo página */
+  --card:#ffffff;       /* panel claro */
+  --card-dark:#141821;  /* panel oscuro de la derecha */
+  --radius:10px;        /* CUADRADO suave */
+
+  min-height: 100dvh;
+  background: var(--bg);
+  padding: 24px 0 48px;
+  font-family: "League Spartan", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ====== Contenedor centrado ====== */
+.page.consultas-red .wrap{
+  max-width: 980px;                 /* ancho del bloque */
+  margin: 0 auto;                   /* centra horizontal */
+  padding: 0 20px;
+  min-height: calc(100dvh - 48px);  /* para centrar vertical */
+  display: grid;
+  align-content: center;            /* centra vertical */
+}
+
+/* Si la pantalla es baja, no fuerces el centrado vertical */
+@media (max-height: 750px){
+  .page.consultas-red .wrap{
+    align-content: start;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ====== Grid 2 columnas ====== */
+.page.consultas-red .grid{
+  display:grid;
+  grid-template-columns: minmax(500px, 1fr) minmax(360px, .9fr);
+  column-gap: 24px;
+  justify-content: center;
+  align-items: start;
+}
+
+/* ====== Panels ====== */
+.panel{
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: 0 10px 24px rgba(16,24,40,.06);
+  overflow: hidden;
+}
+.panel.side{
+  background: var(--card-dark);
+  border-color: #1f2532;
+  color: #e5e7eb;
+}
+
+/* ====== Encabezado del formulario ====== */
+.panel__head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 18px 18px 0;
+}
+.panel__head .title{ display:flex; align-items:center; gap:12px; }
+.panel__head .logo{ width:44px; height:44px; border-radius:8px; object-fit:cover; }
+.panel__head h2{ margin:0; font-size:1.25rem; font-weight:800; color:var(--ink); }
+.panel__head .muted{ margin:2px 0 0; color:var(--muted); font-weight:600; }
+.panel__head .mail{ font-size:22px; color:var(--red); }
+
+/* ====== Form ====== */
+.form .fields{
+  display:grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  padding: 18px;
+}
+.field{ display:flex; flex-direction:column; gap:6px; }
+.field--half{ grid-column: auto; }
+.field--full{ grid-column: 1 / -1; }
+.field > span{ color:var(--muted); font-weight:700; font-size:.9rem; }
+.hint{ color:var(--muted); font-size:.85rem; }
+
+/* Inputs estilo línea */
+.line{
+  border: 0; border-bottom: 2px solid var(--line);
+  padding: 10px 4px; background:#fff; color:var(--ink);
+  outline: none; border-radius: 0;
+  transition: border-color .2s ease, background .2s ease;
+}
+.line:focus{ border-bottom-color: var(--red); background:#fff; }
+
+/* Acciones */
+.actions{
+  padding: 0 18px 18px;
+  display:flex; gap:10px; justify-content:flex-end;
+}
+
+/* Botones */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  height: 42px; padding: 0 16px;
+  border-radius: 10px; border:1px solid var(--line);
+  font-weight:800; cursor:pointer; background:#fff; color:var(--ink);
+}
+.btn.primary{
+  background: var(--red); border-color: var(--red); color:#fff;
+  box-shadow: 0 8px 20px rgba(211,47,47,.22);
+}
+.btn.primary:hover{ background: var(--red-700); border-color: var(--red-700); }
+.btn[disabled]{ opacity:.55; cursor:not-allowed; }
+
+/* ====== Sidebar: Contacto + Historial ====== */
+.side .contact{
+  padding: 18px;
+  border-bottom: 1px solid #1f2532;
+}
+.side .contact h3{
+  margin:0 0 10px; font-size:1.05rem; color:#fff; font-weight:800;
+}
+.side .contact ul{ list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+.side .contact li{
+  display:flex; gap:10px; align-items:flex-start;
+  background:#0f1420; border:1px solid #222b3b; border-radius: var(--radius);
+  padding:10px 12px;
+}
+.side .contact .ico{ width:28px; display:inline-grid; place-items:center; font-size:16px; }
+.side .contact strong{ color:#fff; }
+.side .contact small{ color:#9aa3b2; }
+
+/* Historial */
+.history{ padding: 16px 18px 18px; display:grid; gap:12px; }
+.history__head{ display:flex; align-items:center; justify-content:space-between; }
+.history__head h3{ margin:0; color:#fff; font-size:1.05rem; font-weight:800; }
+.history__head .count{ color:#ffb4b4; }
+
+.empty{
+  background:#0f1420; border:1px dashed #2a3346; color:#9aa3b2;
+  border-radius: var(--radius); padding:14px; text-align:center; font-weight:700;
+}
+
+.list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+.item{
+  background:#0f1420; border:1px solid #222b3b; border-radius: var(--radius);
+  padding:12px; display:grid; gap:6px;
+}
+.item .top{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.badge{
+  display:inline-flex; align-items:center; height:24px; padding:0 10px;
+  border-radius: 999px; font-size:.78rem; font-weight:800; background:#e5e7eb; color:#111827;
+}
+.badge--red{ background:#fee2e2; color:#b42318; border:1px solid #f4c8c5; }
+.badge--gray{ background:#e5e7eb; color:#111827; }
+.date{ color:#9aa3b2; font-size:.85rem; }
+.subject{ color:#fff; font-weight:800; }
+.msg{ color:#cfd6e0; }
+.resp{
+  margin-top:4px; padding:8px 10px; border-radius:8px;
+  background:#10251f; border:1px solid #244f42; color:#c7f0e3;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 1024px){
+  .page.consultas-red .grid{ grid-template-columns: 1fr; }
+  .panel.side{ order: 2; }
+}
+@media (max-width: 680px){
+  .form .fields{ grid-template-columns: 1fr; }
+}

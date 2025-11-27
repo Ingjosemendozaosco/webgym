@@ -1,0 +1,24 @@
+@use './vars' as *;
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap');
+
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: 'League Spartan', Inter, Roboto, Arial, system-ui, -apple-system, "Segoe UI";
+  color: $text;
+  background: transparent;
+}
+
+input, button { font-family: inherit; font-size: 14px; }
+
+input {
+  padding: 10px 12px;
+  border: 1px solid $border;
+  border-radius: 10px;
+  outline: none;
+  &:focus { border-color: $primary; }
+}
+
+button { @include btn-base; background: $primary; color: white; }

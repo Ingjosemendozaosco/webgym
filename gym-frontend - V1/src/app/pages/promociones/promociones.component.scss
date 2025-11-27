@@ -1,0 +1,115 @@
+.page.promociones {
+  padding: 1.5rem 1rem 2rem;
+}
+
+.promo-hero {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem 1.25rem;
+  border-radius: 1rem;
+  background: radial-gradient(circle at top left, #22c55e33, #0ea5e955), #0f172a;
+  color: #f9fafb;
+}
+
+.promo-hero h1 {
+  margin: 0 0 .25rem;
+  font-size: 1.8rem;
+}
+
+.promo-hero .subtitle {
+  margin: 0;
+  font-size: .9rem;
+  opacity: .85;
+}
+
+.filtros {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.filtros input,
+.filtros select {
+  padding: .35rem .5rem;
+  border-radius: .5rem;
+  border: 1px solid #e5e7eb;
+  font-size: .85rem;
+}
+
+.filtros button {
+  padding: .4rem .75rem;
+  border-radius: 999px;
+  border: none;
+  font-size: .8rem;
+  cursor: pointer;
+}
+
+.filtros .flash-btn {
+  background: #0ea5e9;
+  color: #f9fafb;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.promo-card {
+  border-radius: .9rem;
+  padding: .9rem .9rem 1rem;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(15,23,42,.08);
+  border: 1px solid #e5e7eb;
+}
+
+.promo-card__header {
+  display: flex;
+  gap: .35rem;
+  align-items: center;
+  margin-bottom: .6rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+.badge.tipo {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.badge.pct {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge.evento {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.promo-card .title {
+  margin: 0 0 .25rem;
+  font-size: 1rem;
+}
+
+.promo-card .promo-desc {
+  margin: 0 0 .5rem;
+  font-size: .85rem;
+  color: #4b5563;
+}
+
+.promo-card .meta {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  font-size: .8rem;
+  color: #6b7280;
+}

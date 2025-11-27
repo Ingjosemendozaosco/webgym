@@ -1,0 +1,165 @@
+<section class="page productos--min">
+  <div class="container">
+
+    <!-- Breadcrumb + título -->
+    <div class="head">
+      <nav class="crumbs">
+        <a routerLink="/">Inicio</a> <span>›</span>
+        <span class="muted">Productos</span>
+      </nav>
+      <h1>Productos</h1>
+    </div>
+
+    <!-- Filtros compactos -->
+    <div class="filters">
+      <div class="filters__left">
+        <input [(ngModel)]="q" placeholder="Buscar entre productos…" (keyup.enter)="buscar(0)" />
+        <div class="chips" *ngIf="categoria || soloConStock">
+          <span class="chip" *ngIf="categoria">
+            {{categoria}}
+            <button class="x" (click)="categoria=''; buscar(0)" aria-label="Quitar categoría">✕</button>
+          </span>
+          <span class="chip" *ngIf="soloConStock">
+            Solo stock
+            <button class="x" (click)="soloConStock=false; buscar(0)" aria-label="Quitar solo stock">✕</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="filters__right">
+        <label class="select">
+          <span>Categoria</span>
+          <select [(ngModel)]="categoria" (change)="buscar(0)">
+            <option value="">Todas</option>
+            <option *ngFor="let c of categorias" [value]="c">{{c}}</option>
+          </select>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" [(ngModel)]="soloConStock" (change)="buscar(0)"/>
+          <span>Solo con stock</span>
+        </label>
+
+        <button class="btn primary" (click)="buscar(0)">Buscar</button>
+      </div>
+    </div>
+
+    <!-- Grid 3 por fila -->
+    <div class="grid3">
+      <article class="card" *ngFor="let p of getCards()" [ngClass]="{'featured': p.id===featuredId}">
+        <!-- badge categoría / destacado -->
+        <span class="badge" *ngIf="p.categoria">{{ p.categoria }}</span>
+        <span class="badge soft" *ngIf="p.descuento && p.descuento>0">-{{p.descuento}}%</span>
+
+        <!-- media + like -->
+        <a class="media" (click)="openDetalles(p)">
+          <img [src]="p.imagen || defaultImg" [alt]="p.nombre" loading="lazy">
+        </a>
+        <button class="icon like" type="button" (click)="like(p)" aria-label="Me gusta">
+          <span class="like-face like-heart">♥</span>
+          <span class="like-face like-count">{{ p.popularidad || 0 }}</span>
+        </button>
+
+        <div class="card-rating-badge" *ngIf="hasRating(p)">
+          <span class="value">{{ ratingResumen[p.id].promedio | number:'1.0-1' }}</span>
+          <span class="star">⭐</span>
+        </div>
+
+        <!-- cuerpo -->
+        <div class="body">
+          <h3 class="title" (click)="openDetalles(p)">{{ p.nombre }}</h3>
+          <div class="meta">
+            <span class="label">Precio:</span>
+            <div class="price">
+              <strong>S/ {{ (p._precioFinal ?? (p.precio - (p.precio*(p.descuento||0)/100))) | number:'1.2-2' }}</strong>
+              <s *ngIf="(p._bestPct ?? (p.descuento||0))>0">&nbsp;S/ {{ p.precio | number:'1.2-2' }}</s>
+            </div>
+            <div class="promo-slot">
+              <p class="promo-note" *ngIf="p._promoPct && p._promoPct>0">
+                Descuento extra por promociones: -{{ p._promoPct | number:'1.0-0' }}%
+              </p>
+            </div>
+          </div>
+
+          <div class="cta">
+            <button class="btn ghost" type="button" (click)="openDetalles(p)">Ver más</button>
+            <button class="btn cart" type="button"
+                    [disabled]="!p.disponible || p.stock<=0"
+                    (click)="comprar(p)">
+              <span class="cart-ico">🛒</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sin stock -->
+        <div class="soldout" *ngIf="!p.disponible || p.stock<=0">Sin stock</div>
+      </article>
+    </div>
+
+  </div>
+
+  <!-- Mantén tus overlays / toasts / modal como los tienes -->
+  <div class="overlay" *ngIf="adding">
+    <div class="loader"><div class="gym-icon"></div><div class="progress"><span class="bar"></span></div><div>Cargando...</div></div>
+  </div>
+  <div class="toast success" *ngIf="showSuccess">Agregado al carrito</div>
+
+  <div class="modal" *ngIf="selected" (click)="closeDetalles()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closeDetalles()" aria-label="Cerrar">✕</button>
+      <div class="modal-media">
+        <img class="modal-img" [src]="selected.imagen || defaultImg" [alt]="selected.nombre" loading="lazy" />
+      </div>
+      <div class="modal-info">
+        <div class="modal-title-row">
+          <h2>🏋️ {{selected.nombre}}</h2>
+          <div class="badge soft" *ngIf="selected.descuento && selected.descuento>0">-{{selected.descuento}}%</div>
+        </div>
+        <p class="cat chip">{{selected.categoria}}</p>
+        <p class="stock" *ngIf="selected">Stock: <strong>{{selected.stock || 0}}</strong> unidades</p>
+        <p class="desc">{{selected.descripcion}}</p>
+
+        <div class="precios">
+          <span class="actual">S/ {{(selected._precioFinal ?? (selected.precio - (selected.precio * (selected.descuento||0)/100))) | number:'1.2-2'}}</span>
+          <span class="orig" *ngIf="(selected._bestPct ?? (selected.descuento||0))>0">&nbsp;S/ {{selected.precio | number:'1.2-2'}}</span>
+        </div>
+        <div class="promo-slot">
+          <p class="promo-note" *ngIf="selected._promoPct && selected._promoPct>0">
+            Descuento extra por promociones: -{{ selected._promoPct | number:'1.0-0' }}%
+          </p>
+        </div>
+
+        <div class="rating-slot">
+          <div class="rating" *ngIf="hasRating(selected)">
+            <span>⭐ {{ ratingResumen[selected.id].promedio | number:'1.0-1' }}</span>
+            <span class="rating-count">· {{ ratingResumen[selected.id].cantidad }} {{ ratingResumen[selected.id].cantidad === 1 ? 'reseña' : 'reseñas' }}</span>
+          </div>
+        </div>
+
+        <div class="rating-form">
+          <label>Tu calificación</label>
+          <div class="rating-stars">
+            <button type="button"
+                    *ngFor="let s of [1,2,3,4,5]"
+                    [class.active]="ratingForm.puntuacion >= s"
+                    (click)="ratingForm.puntuacion = s">★</button>
+          </div>
+          <label>¿Cómo fue tu experiencia?</label>
+          <select [(ngModel)]="ratingForm.comentario">
+            <option [ngValue]="''" disabled>Selecciona una opción</option>
+            <option [ngValue]="'EXCELENTE'">Excelente</option>
+            <option [ngValue]="'MUY_BUENA'">Muy buena</option>
+            <option [ngValue]="'BUENA'">Buena</option>
+            <option [ngValue]="'REGULAR'">Regular</option>
+            <option [ngValue]="'MALA'">Mala</option>
+          </select>
+          <button class="btn-buy" type="button" (click)="enviarCalificacionProducto()">Enviar reseña</button>
+        </div>
+        <div class="acciones">
+          <button class="btn-like" (click)="like(selected)">❤️ {{selected.popularidad || 0}}</button>
+          <button class="btn-buy" [disabled]="!selected.disponible || selected.stock<=0" (click)="comprar(selected)">🛒 Comprar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

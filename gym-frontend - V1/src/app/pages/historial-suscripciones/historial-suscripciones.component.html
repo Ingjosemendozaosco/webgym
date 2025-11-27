@@ -1,0 +1,37 @@
+<section class="page historial historial-suscripciones">
+  <header class="head">
+    <h1>Historial de suscripciones</h1>
+    <p class="muted">Planes y membresías asociados a tu cuenta.</p>
+    <a routerLink="/perfil" class="back">← Volver al perfil</a>
+  </header>
+
+  <div *ngIf="cargando" class="muted">Cargando…</div>
+
+  <div *ngIf="!cargando && !suscripciones?.length" class="empty">
+    No tienes suscripciones registradas.
+  </div>
+
+  <div class="cards" *ngIf="!cargando && suscripciones?.length">
+    <article class="card" *ngFor="let s of suscripciones" [ngClass]="'estado-' + (s._estadoKey || 'otro')">
+      <div class="card-inner">
+        <div class="pill-avatar thumb--membresia" *ngIf="s.tipo==='MEMBRESIA'"></div>
+        <div class="pill-avatar thumb--plan" *ngIf="s.tipo==='PLAN'"></div>
+        <div class="body">
+          <div class="row-top">
+            <div class="title">{{ s.membresia?.nombre || s.planSuscripcion?.nombre || s.plan?.nombre || s.nombre }}</div>
+            <span class="badge">{{ s.membresia ? 'Membresía' : (s.planSuscripcion || s.plan ? 'Plan' : '') }}</span>
+          </div>
+          <div class="row-main">
+            <div class="dates">
+              <span>Inicio: {{ s.fechaInicio | date:'shortDate' }}</span>
+              <span>Fin: {{ s.fechaFin | date:'shortDate' }}</span>
+            </div>
+            <div class="status">
+              <span class="badge">{{ s.estado }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

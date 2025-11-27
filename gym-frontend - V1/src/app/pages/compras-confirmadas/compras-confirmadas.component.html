@@ -1,0 +1,60 @@
+<section class="page compras-confirmadas">
+  <header class="head">
+    <h1>Compras confirmadas</h1>
+    <p class="muted">Pedidos confirmados listos para entrega.</p>
+    <a routerLink="/perfil" class="back">← Volver al perfil</a>
+  </header>
+
+  <div *ngIf="cargando" class="muted">Cargando…</div>
+
+  <div *ngIf="!cargando && !pedidos?.length" class="empty">
+    No tienes compras confirmadas todavía.
+  </div>
+
+  <div class="cards" *ngIf="!cargando && pedidos?.length">
+    <article class="card" *ngFor="let p of pedidos">
+      <div class="card-inner">
+        <div class="thumb">
+          <img [src]="p._thumb || p._img || defaultImg" [alt]="p._titulo || 'Producto'" loading="lazy" />
+        </div>
+        <div class="body">
+          <div class="row-top">
+            <span class="chip">Pedido #{{ p.id }}</span>
+          </div>
+
+          <div class="row-top">
+            
+            <span class="date">{{ p.fechaConfirmacion || p.fechaPedido || p.fecha | date:'short' }}</span>
+          </div>
+          <div class="row-main">
+            <div class="info">
+              <div class="label">Total</div>
+              <div class="amount">S/ {{ p.total | number:'1.2-2' }}</div>
+              <div class="label">Estado</div>
+              <div class="status"><span class="badge">{{ p.estado }}</span></div>
+            </div>
+            <div class="actions">
+              <button class="btn delivery" type="button">Delivery</button>
+            </div>
+          </div>
+          <div class="row-actions">
+            <button class="btn-link" type="button" (click)="p._show = !p._show">
+              {{ p._show ? 'Ver menos' : 'Ver más' }}
+            </button>
+          </div>
+          <div class="row-details" *ngIf="p._show && (p.detalles || p.detallePedidos)">
+            <ul>
+              <li *ngFor="let d of (p.detalles || p.detallePedidos)">
+                <span class="prod-name">{{ d.producto?.nombre || d.product?.nombre || 'Producto' }}</span>
+                <span class="prod-qty">× {{ d.cantidad }}</span>
+                <span class="prod-price">
+                  S/ {{ (d.subtotal || (d.precioUnitario * d.cantidad)) | number:'1.2-2' }}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

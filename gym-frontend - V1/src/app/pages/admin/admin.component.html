@@ -1,0 +1,58 @@
+<div class="dashboard-container">
+  <div class="header-row">
+    <div>
+      <h1>Panel de Administración</h1>
+      <p class="subtitle">Accede rápidamente a la gestión del sistema</p>
+    </div>
+    <div class="actions">
+      <button class="logout-btn" (click)="cerrarSesion()">
+        <span class="icon">⎋</span>
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <a class="dashboard-card" routerLink="/admin/usuarios">
+      <div class="card-icon">👥</div>
+      <h3>Gestión de Usuarios</h3>
+      <p class="desc">Editar, bloquear y asignar rol de trabajador</p>
+    </a>
+
+    <a class="dashboard-card" routerLink="/admin/productos">
+      <div class="card-icon">📦</div>
+      <h3>Gestión de Productos</h3>
+      <p class="desc">CRUD, inventario, precios, stock y descuentos</p>
+    </a>
+
+    <a class="dashboard-card" routerLink="/admin/suscripciones">
+      <div class="card-icon">🪪</div>
+      <h3>Suscripciones</h3>
+      <p class="desc">Crear planes y membresías; renovaciones</p>
+    </a>
+
+    <a class="dashboard-card" routerLink="/admin/pedidos">
+      <div class="card-icon">🧾</div>
+      <h3>Gestión de Pedidos</h3>
+      <p class="desc">Revisión y estados de pedidos</p>
+    </a>
+
+    <a class="dashboard-card" routerLink="/admin/reservas">
+      <div class="card-icon">📅</div>
+      <h3>Gestión de Reservas</h3>
+      <p class="desc">Reservaciones de productos y membresías</p>
+    </a>
+
+    <a class="dashboard-card" routerLink="/admin/estadisticas">
+      <div class="card-icon">📈</div>
+      <h3>Estadísticas</h3>
+      <p class="desc">Resumen y métricas clave</p>
+    </a>
+
+    <a class="dashboard-card" routerLink="/admin/promociones">
+      <div class="card-icon">🏷️</div>
+      <h3>Promociones</h3>
+      <p class="desc">Crear, editar y administrar promociones</p>
+    </a>
+  </div>
+</div>

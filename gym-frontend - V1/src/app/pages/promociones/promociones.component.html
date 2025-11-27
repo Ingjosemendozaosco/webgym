@@ -1,0 +1,55 @@
+<section class="page promociones">
+
+  <div class="promo-hero">
+    <h1>Promociones vigentes</h1>
+    <p class="subtitle">Descubre descuentos activos en productos, reservas y campañas especiales.</p>
+  </div>
+
+  <div class="filtros">
+    <input [(ngModel)]="q" placeholder="Buscar promociones" />
+    <label>
+      Tipo
+      <select [(ngModel)]="tipo" (change)="buscar(0)">
+        <option value="">Todos</option>
+        <option value="PRODUCTO">Producto</option>
+        <option value="RESERVA">Reserva</option>
+        <option value="GENERAL">General</option>
+      </select>
+    </label>
+    <label>
+      Evento
+      <input [(ngModel)]="evento" placeholder="(Navidad, etc.)" />
+    </label>
+    <label>
+      Categoría (producto)
+      <select [(ngModel)]="categoria" (change)="buscar(0)">
+        <option value="">Todas</option>
+        <option *ngFor="let c of categoriasProducto" [value]="c">{{c}}</option>
+      </select>
+    </label>
+    <button (click)="buscar(0)">Buscar</button>
+    <button class="flash-btn" (click)="flash24h()">Ver Flash 24h</button>
+  </div>
+
+  <div class="grid">
+    <div class="card promo-card" *ngFor="let p of data?.content">
+      <div class="promo-card__header">
+        <span class="badge tipo">{{p.tipo}}</span>
+        <span class="badge pct">-{{p.descuentoPorcentaje || 0}}%</span>
+        <span class="badge evento" *ngIf="p.evento">{{p.evento}}</span>
+      </div>
+      <h3 class="title">{{p.titulo}}</h3>
+      <p class="promo-desc">{{p.descripcion}}</p>
+      <div class="meta">
+        <span class="cat" *ngIf="p.categoria">Categoría: {{p.categoria}}</span>
+        <span class="vigencia" *ngIf="p.fechaFin">Válido hasta {{p.fechaFin | date:'short'}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="paginacion" *ngIf="data?.totalElements>size">
+    <button [disabled]="page===0" (click)="buscar(page-1)">Anterior</button>
+    <span>Página {{page+1}}</span>
+    <button (click)="buscar(page+1)">Siguiente</button>
+  </div>
+</section>

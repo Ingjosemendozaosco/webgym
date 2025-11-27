@@ -1,0 +1,17 @@
+.page.trabajador-soporte { padding: 1rem; display:grid; gap: .75rem; }
+.filters { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+.filters select, .filters button { padding:.45rem .65rem; border:1px solid #e5e7eb; border-radius:.55rem; }
+.table-wrapper { border:1px solid #eef2f7; border-radius:.75rem; background:#fff; box-shadow: 0 8px 22px rgba(0,0,0,.06); overflow:auto; }
+.table-wrapper table { width:100%; border-collapse: collapse; }
+th, td { padding:.6rem .7rem; border-bottom:1px solid #f1f5f9; text-align:left; vertical-align: top; }
+th { background:#f8fafc; font-weight:700; }
+.w { max-width: 360px; white-space: pre-wrap; word-break: break-word; }
+.actions { display:flex; gap:.4rem; }
+.pager { display:flex; gap:.5rem; align-items:center; justify-content:flex-end; padding:.6rem; }
+.modal-backdrop { position: fixed; inset: 0; background: rgba(2,8,23,.55); z-index: 1000; }
+.modal { position: fixed; top: 12%; left: 50%; transform: translateX(-50%); width: 95%; max-width: 560px; background: #fff; border:1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 12px 30px rgba(2,8,23,.15); z-index: 1001; overflow: hidden; }
+.modal-header { display:flex; align-items:center; justify-content: space-between; padding: 12px 14px; border-bottom:1px solid #f1f5f9; }
+.modal-body { padding: 12px 14px; display:grid; gap:.4rem; }
+.modal-body textarea { width:100%; border:1px solid #e5e7eb; border-radius:.55rem; padding:.5rem; resize: vertical; }
+.modal-footer { padding: 10px 14px; border-top:1px solid #f1f5f9; display:flex; justify-content:flex-end; gap:.5rem; }
+.toast { position:fixed; right:16px; bottom:16px; background:#d1fae5; border:1px solid #a7f3d0; color:#065f46; padding:.6rem .8rem; border-radius:.6rem; box-shadow:0 8px 24px rgba(0,0,0,.12); font-weight:600; z-index:1002; }

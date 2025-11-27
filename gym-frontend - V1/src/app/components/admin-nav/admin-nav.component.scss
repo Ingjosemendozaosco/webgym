@@ -1,0 +1,4 @@
+.admin-nav { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; padding:.5rem; border:1px solid rgba(226,232,240,.6); border-radius:.75rem; background: transparent; box-shadow:0 8px 22px rgba(0,0,0,.06); }
+.admin-nav a { padding:.45rem .7rem; border:1px solid transparent; border-radius:.55rem; font-weight:800; color:#334155; text-decoration:none; }
+.admin-nav a:hover { background:#f1f5f9; }
+.admin-nav a.active { background:#eef2ff; color:#1d4ed8; border-color:#dbeafe; }

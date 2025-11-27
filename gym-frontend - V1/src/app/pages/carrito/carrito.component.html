@@ -1,0 +1,73 @@
+<section class="page carrito">
+  <div class="inner">
+  <header class="head">
+    <h1>🛒 Tu carrito 💪</h1>
+    <div class="head-actions">
+      <button class="btn danger outline" (click)="vaciar()" [disabled]="!data?.items?.length || cargandoAccion">Vaciar carrito</button>
+      <a class="btn secondary" routerLink="/productos">Seguir comprando</a>
+    </div>
+  </header>
+
+  <div class="content">
+  <div class="lista" *ngIf="data?.items?.length; else vacio">
+    <div class="item" *ngFor="let it of data.items">
+      <div class="img" [style.background-image]="it.producto?.imagen ? 'url(' + it.producto?.imagen + ')' : null"></div>
+      <div class="info">
+        <div class="nombre">{{it.producto?.nombre}}</div>
+        <div class="detalles">S/ {{it.precioUnitario | number:'1.2-2'}} c/u</div>
+      </div>
+      <div class="controles">
+        <button class="btn ghost icon" (click)="dec(it)" [disabled]="cargandoAccion || it.cantidad<=1" title="Disminuir">−</button>
+        <span class="cant">{{it.cantidad}}</span>
+        <button class="btn ghost icon" (click)="inc(it)" [disabled]="cargandoAccion" title="Aumentar">+</button>
+      </div>
+      <div class="subtotal">S/ {{(it.precioUnitario * it.cantidad) | number:'1.2-2'}}</div>
+      <div class="acciones">
+        <button class="btn link danger" (click)="eliminar(it)" [disabled]="cargandoAccion" title="Quitar del carrito">🗑️ Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #vacio>
+    <div class="empty">
+      <div class="empty-icon">🛒</div>
+      <h3>Tu carrito está vacío</h3>
+      <p>Explora nuestros productos y añade tus favoritos.</p>
+      <a class="btn primario" routerLink="/productos">Ver productos</a>
+    </div>
+  </ng-template>
+
+  <aside class="resumen">
+    <div class="line"><span>Subtotal</span><strong>S/ {{data.subtotal | number:'1.2-2'}}</strong></div>
+    <div class="line" *ngIf="data.descuentoPlanPorcentaje && data.descuentoPlanPorcentaje>0">
+      <span>Descuento ({{data.descuentoPlanPorcentaje}}%)</span><strong>−S/ {{data.descuentoPlanMonto | number:'1.2-2'}}</strong>
+    </div>
+    <div class="line total"><span>Total ({{data.moneda}})</span><strong>S/ {{data.total | number:'1.2-2'}}</strong></div>
+    <div class="pay-actions">
+      <a class="btn primario grande" routerLink="/pagos" [class.disabled]="!data?.items?.length">Ir a pagos</a>
+    </div>
+  </aside>
+  </div>
+
+  <section class="recomendados" *ngIf="carouselItems?.length; else noSugs">
+    <h2>También te puede interesar</h2>
+    <div class="carousel" [class.fading]="carouselFading" [class.few]="carouselItems.length < 3">
+      <div class="card" *ngFor="let p of carouselItems">
+        <div class="pic" [style.background-image]="p.imagen ? 'url(' + p.imagen + ')' : null"></div>
+        <div class="title">{{p.nombre}}</div>
+        <div class="price">S/ {{p.precio | number:'1.2-2'}}</div>
+        <button class="btn add" (click)="addToCart(p)" [disabled]="cargandoAccion">Agregar</button>
+      </div>
+    </div>
+  </section>
+  <ng-template #noSugs>
+    <div class="no-suggestions">
+      <div class="emoji">✨</div>
+      <p>Por ahora no hay más sugerencias. Explora nuestros productos y encuentra algo nuevo.</p>
+      <a routerLink="/productos" class="btn secondary">Ver productos</a>
+    </div>
+  </ng-template>
+
+  <div class="toast success" *ngIf="showToast">{{toastMsg}}</div>
+  </div>
+</section>

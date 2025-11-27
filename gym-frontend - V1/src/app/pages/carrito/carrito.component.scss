@@ -1,0 +1,65 @@
+.page.carrito { padding: 0; display:grid; gap:1rem; min-height:100dvh; 
+  background-image: url('https://image.slidesdocs.com/responsive-images/background/poster-supermarket-shopping-geometry-abstract-powerpoint-background_8fea6bc758__960_540.jpg');
+  background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;
+}
+.inner { width: min(1200px, 96%); margin: 0 auto; padding: 1rem; display:grid; gap:1rem; }
+.content { display:grid; grid-template-columns: 1fr minmax(260px, 340px); gap:1rem; align-items:start; }
+.head { display:flex; align-items:center; justify-content:space-between; }
+.head h1 { margin:0; font-size:1.4rem; }
+.head h1 { font-size:1.8rem; text-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.head-actions { display:flex; gap:.5rem; }
+
+.lista { display: grid; gap: .75rem; }
+.item { display: grid; grid-template-columns: 80px 1fr auto auto auto; gap: .9rem; align-items: center; padding: .8rem; border: 1px solid rgba(255,255,255,.18); border-radius: .9rem; background: rgba(255,255,255,.62); backdrop-filter: blur(8px); box-shadow: 0 8px 22px rgba(2,6,23,.06); }
+.img { width:80px; height:80px; border-radius:.7rem; background:#f3f4f6 center/cover no-repeat; }
+.info { display:grid; gap:.25rem; }
+.nombre { font-weight: 800; letter-spacing:.2px; }
+.detalles { color:#6b7280; font-size:.9rem; }
+.controles { display:flex; align-items:center; gap:.5rem; }
+.controles .btn { width:34px; height:34px; border-radius:.55rem; border:1px solid rgba(0,0,0,.25); background:#111827; color:#fff; cursor:pointer; font-weight:800; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.controles .btn.icon { font-size:1.05rem; line-height:1; }
+.controles .btn.ghost { background:#111827; color:#fff; border-color:#0b1220; }
+.controles .btn:hover { filter: brightness(1.08); }
+.controles .btn:disabled { opacity:.5; cursor:not-allowed; }
+.controles .cant { min-width: 28px; text-align: center; font-weight:700; }
+.subtotal { font-weight:800; }
+.acciones .btn.link { background: transparent; border:none; color:#ef4444; cursor:pointer; font-weight:700; }
+
+.empty { text-align:center; padding:2rem 1rem; border:1px dashed rgba(255,255,255,.4); border-radius:1rem; background:rgba(255,255,255,.58); backdrop-filter: blur(6px); }
+.empty-icon { font-size:2.2rem; }
+
+.resumen { margin-top: .5rem; font-weight: 600; border-top:1px dashed #e5e7eb; padding-top:.75rem; display:grid; gap:.5rem; }
+.resumen .line { display:flex; align-items:center; justify-content:space-between; }
+.resumen .total strong { font-size:1.2rem; color:#0f172a; }
+.pay-actions { display:flex; }
+.btn { padding:.56rem .9rem; border:1px solid #111827; background:#111827; color:#fff; border-radius:.6rem; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:.4rem; }
+.btn.primario { background:#0f172a; border-color:#0f172a; }
+.btn.primario.grande { padding:.7rem 1.1rem; font-weight:800; }
+.btn.secondary { background:#0ea5e9; border-color:#0ea5e9; }
+.btn.danger { background:#ef4444; border-color:#ef4444; }
+.btn.outline { background:transparent; color:#ef4444; border-color:#ef4444; }
+.btn.disabled { opacity:.6; pointer-events:none; }
+
+.toast { position: fixed; right: 16px; bottom: 16px; padding:.65rem .9rem; background:#d1fae5; color:#065f46; border:1px solid #a7f3d0; border-radius:.75rem; box-shadow: 0 8px 24px rgba(0,0,0,.12); font-weight:700; }
+
+/* Carousel */
+.recomendados { margin-top: .5rem; }
+.recomendados h2 { font-size:1.1rem; margin:.2rem 0 .6rem; }
+.carousel { display:flex; gap:.8rem; overflow:hidden; padding-bottom:.2rem; transition: opacity 1s ease; width:100%; }
+.carousel.fading { opacity: 0; }
+.carousel.few { justify-content:center; }
+.carousel .card{ border:1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.62); backdrop-filter: blur(8px); border-radius:.9rem; padding:.7rem; display:grid; gap:.4rem; flex: 0 1 calc(25% - .6rem); min-width: 200px; }
+.no-suggestions { text-align:center; padding:1rem; background: rgba(255,255,255,.6); backdrop-filter: blur(6px); border:1px dashed rgba(255,255,255,.4); border-radius:.9rem; }
+.no-suggestions .emoji { font-size:1.4rem; }
+.carousel .pic{ height:120px; border-radius:.7rem; background:#f3f4f6 center/cover no-repeat; }
+.carousel .title{ font-weight:800; }
+.carousel .price{ font-weight:700; color:#0f172a; }
+.carousel .btn.add{ background:#0ea5e9; border-color:#0ea5e9; }
+
+/* Responsive items per row */
+@media (max-width: 900px){
+  .carousel .card{ flex: 0 1 calc(33.333% - .6rem); }
+}
+@media (max-width: 640px){
+  .carousel .card{ flex: 0 1 calc(50% - .6rem); }
+}

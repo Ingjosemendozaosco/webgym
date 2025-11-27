@@ -1,0 +1,135 @@
+<section class="page reservas">
+  <div class="hero">
+    <div class="hero__inner">
+      <h1>Reservas inteligentes</h1>
+      <p>Organiza tus sesiones y equipos favoritos en minutos. Gestiona todo desde esta vista moderna.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="surface tabs-card">
+      <div class="tabs">
+        <button class="tab" [class.active]="activeTab==='explorar'" (click)="setTab('explorar')">Explorar</button>
+        <button class="tab" [class.active]="activeTab==='mias'" (click)="setTab('mias')">Mis reservaciones</button>
+      </div>
+    </div>
+
+    <div class="surface filtros" *ngIf="activeTab==='explorar'">
+      <input [(ngModel)]="q" (keyup.enter)="buscar(0)" placeholder="Buscar equipos o áreas" />
+      <label>
+        Uso/Categoría
+        <select [(ngModel)]="categoria" (change)="buscar(0)">
+          <option value="">Todos</option>
+          <option *ngFor="let u of usos" [value]="u">{{u}}</option>
+        </select>
+      </label>
+      <label class="checkbox">
+        <input type="checkbox" [(ngModel)]="soloConStock" (change)="buscar(0)"/> Solo con stock
+      </label>
+      <button class="btn primary" (click)="buscar(0)">Buscar</button>
+    </div>
+
+    <div class="catalog-grid" *ngIf="activeTab==='explorar'">
+      <article class="catalog-card" *ngFor="let p of (data?.content || [])" [class.selected]="productoIdSeleccionado===p.id">
+        <div class="catalog-card__media" (click)="verAgenda(p)" [class.noimg]="!p.imagen" [style.background-image]="p.imagen ? 'url(' + p.imagen + ')' : null"></div>
+        <div class="catalog-card__body" (click)="verAgenda(p)">
+          <div class="catalog-card__head">
+            <h3>{{p.nombre}}</h3>
+            <span class="pill" [class.off]="p.stock<=0">{{p.stock>0? (p.stock+' disponibles') : 'Sin stock'}}</span>
+          </div>
+          <p class="catalog-card__category">{{p.categoria || p.uso}}</p>
+          <button class="btn ghost" type="button" (click)="verAgenda(p)">Ver agenda</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="surface mis-reservas" *ngIf="activeTab==='mias'">
+      <div class="mis-reservas__head">
+        <h3>Mis reservaciones</h3>
+        <button class="btn ghost" (click)="verMiAgenda()">Mi agenda</button>
+      </div>
+      <div *ngIf="!miasList?.length" class="muted">No tienes reservaciones recientes.</div>
+      <ul class="lista" *ngIf="miasList?.length">
+        <li *ngFor="let r of miasList">
+          <span class="code">#{{r.id}}</span>
+          <div class="detalle">
+            <strong>{{r.producto?.nombre || 'Producto'}}</strong>
+            <span class="muted">{{r.fecha | date:'short'}}</span>
+          </div>
+          <span class="dur">{{r.duracionMinutos || 60}} min</span>
+          <span class="estado" [class.cancelled]="(r.estado||'').toUpperCase()==='CANCELADA'">{{r.estado || 'PENDIENTE'}}</span>
+          <button class="btn ghost" *ngIf="(r.estado||'').toUpperCase()!=='CANCELADA'" [disabled]="!puedeCancelar(r)" (click)="cancelar(r)">Cancelar</button>
+          <button class="btn ghost danger" *ngIf="(r.estado||'').toUpperCase()==='CANCELADA'" (click)="eliminar(r)">Eliminar</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="toast success" *ngIf="showToast">{{toastMsg}}</div>
+
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-card dark">
+      <div class="modal-header">
+        <h3>
+          <ng-container *ngIf="modalMode==='agenda'; else titleReserva">
+            Agenda semanal {{ selectedProducto?.nombre ? ('· ' + selectedProducto?.nombre) : '(mis reservas)' }}
+          </ng-container>
+          <ng-template #titleReserva>Confirmar reserva</ng-template>
+        </h3>
+        <button class="close" (click)="closeModal()">×</button>
+      </div>
+      <div class="modal-content">
+        <ng-container *ngIf="modalMode==='agenda'; else contenidoReserva">
+          <div class="agenda-header">
+            <button class="tab" (click)="prevWeek()" aria-label="Semana anterior">&#8592;</button>
+            <div class="legend">
+              <span class="badge free">Libre</span>
+              <span class="badge busy">Ocupado</span>
+              <span class="badge past">Pasado</span>
+            </div>
+            <button class="tab" (click)="nextWeek()" aria-label="Semana siguiente">&#8594;</button>
+          </div>
+          <div class="agenda-grid">
+            <div class="agenda-row agenda-head">
+              <div class="cell hour"></div>
+              <div class="cell day" *ngFor="let d of days">{{d.label}}</div>
+            </div>
+            <div class="agenda-row" *ngFor="let h of hours">
+              <div class="cell hour">{{h}}:00</div>
+              <div class="cell slot"
+                   *ngFor="let d of days"
+                   [class.taken]="slotDisabled(d.iso, h) && ocupados.has(slotKey(d.iso,h))"
+                   [class.pending]="ocupados.has(slotKey(d.iso,h)) && (estadoKey(d.iso,h)==='PENDIENTE')"
+                   [class.confirmed]="ocupados.has(slotKey(d.iso,h)) && (estadoKey(d.iso,h)==='CONFIRMADA')"
+                   [class.mine]="!selectedProducto?.id && ocupados.has(slotKey(d.iso,h))"
+                   [class.past]="slotDisabled(d.iso, h) && !ocupados.has(slotKey(d.iso,h))"
+                   [class.free]="!slotDisabled(d.iso, h)"
+                   (click)="!slotDisabled(d.iso,h) ? pickSlot(d.iso,h) : (!selectedProducto?.id && ocupados.has(slotKey(d.iso,h)) ? cancelarSlot(d.iso,h) : null)"
+                   [title]="!selectedProducto?.id && ocupados.has(slotKey(d.iso,h)) ? 'Cancelar mi reserva' : (selectedProducto?.id ? 'Reserva ' + d.label + ' ' + h + ':00' : 'Selecciona un producto para reservar')">
+                <span class="slot-label" *ngIf="!selectedProducto?.id && ocupados.has(slotKey(d.iso,h))">{{ nameForSlot(d.iso,h) }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #contenidoReserva>
+          <div class="muted">{{selectedProducto?.nombre}} — {{selectedProducto?.categoria || selectedProducto?.uso}}</div>
+          <div class="row">
+            <label>Fecha y hora</label>
+            <input type="datetime-local" [(ngModel)]="fecha" />
+          </div>
+          <div class="row">
+            <label>Duración (min)</label>
+            <input type="number" min="60" step="60" [(ngModel)]="duracionMinutos" />
+            <small class="muted">Por defecto 60 min. Si tu plan permite más, puedes usar múltiplos de 60 (120, 180...).</small>
+          </div>
+        </ng-template>
+      </div>
+      <div class="modal-actions">
+        <button class="btn ghost" (click)="closeModal()">Cerrar</button>
+        <ng-container *ngIf="modalMode==='reserva'">
+          <button class="btn primary" (click)="reservar()">Reservar ahora</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</section>

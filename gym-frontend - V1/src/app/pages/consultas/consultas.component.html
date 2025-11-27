@@ -1,0 +1,116 @@
+<section class="page consultas-red">
+  <div class="wrap">
+    <div class="grid">
+
+      <!-- Panel izquierdo: Formulario -->
+      <article class="panel form">
+        <header class="panel__head">
+          <div class="title">
+            <img class="logo" src="https://res.cloudinary.com/dyivnbh3x/image/upload/f_auto,q_auto,w_88/logogym_xk98yu.jpg" alt="AngelGyms">
+            <div>
+              <h2>Enviar un mensaje</h2>
+              <p class="muted">Selecciona el tipo, escribe el asunto y cuéntanos tu mensaje.</p>
+            </div>
+          </div>
+          <span class="mail" aria-hidden="true">✉️</span>
+        </header>
+
+        <div class="fields">
+          <!-- Tipo -->
+          <label class="field field--half">
+            <span>Tipo</span>
+            <select class="line" [(ngModel)]="tipo" aria-label="Tipo de consulta">
+              <option [ngValue]="''">Selecciona…</option>
+              <option [ngValue]="'queja'">Queja</option>
+              <option [ngValue]="'sugerencia'">Sugerencia</option>
+            </select>
+            <small class="hint" *ngIf="tipo==='queja'">😠 Indícanos el problema con detalle.</small>
+            <small class="hint" *ngIf="tipo==='sugerencia'">💡 Tu idea nos ayuda a mejorar.</small>
+            <small class="hint" *ngIf="!tipo">📌 Selecciona un tipo para continuar.</small>
+          </label>
+
+          <!-- Asunto -->
+          <label class="field field--half">
+            <span>Asunto</span>
+            <input class="line" [(ngModel)]="asunto" placeholder="Asunto" aria-label="Asunto">
+          </label>
+
+          <!-- Mensaje -->
+          <label class="field field--full">
+            <span>Mensaje</span>
+            <textarea class="line" rows="6" [(ngModel)]="mensaje" placeholder="Escribe tu mensaje…" aria-label="Mensaje"></textarea>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn" type="button" (click)="limpiar()">Limpiar</button>
+          <button class="btn primary" type="button" (click)="enviar()" [disabled]="!asunto || !mensaje">Enviar</button>
+        </div>
+      </article>
+
+      <!-- Panel derecho: Contacto + Historial -->
+      <aside class="panel side">
+        <div class="contact">
+          <h3>Información de contacto</h3>
+          <ul>
+            <li>
+              <span class="ico" aria-hidden="true">📞</span>
+              <div>
+                <strong>+51 900 000 000</strong><br>
+                <small>Lun–Vie 9:00–18:00</small>
+              </div>
+            </li>
+            <li>
+              <span class="ico" aria-hidden="true">✉️</span>
+              <div>
+                <strong>soporte@angelgyms.com</strong><br>
+                <small>Respondemos en menos de 24h</small>
+              </div>
+            </li>
+            <li>
+              <span class="ico" aria-hidden="true">📍</span>
+              <div>
+                <strong>Av. Fitness 123</strong><br>
+                <small>Lima, Perú</small>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="history">
+          <div class="history__head">
+            <h3>Mis consultas</h3>
+            <span class="count">({{ data.length || 0 }})</span>
+          </div>
+
+          <div class="empty" *ngIf="!data.length">
+            No tienes consultas registradas.
+          </div>
+
+          <ul class="list" *ngIf="data.length">
+            <li class="item" *ngFor="let c of data; trackBy: trackById">
+              <div class="top">
+                <span class="badge" [ngClass]="{ 'badge--red': c.tipo==='queja', 'badge--gray': c.tipo!=='queja' }">
+                  <ng-container [ngSwitch]="c.tipo">
+                    <span *ngSwitchCase="'queja'">Queja</span>
+                    <span *ngSwitchCase="'sugerencia'">Sugerencia</span>
+                    <span *ngSwitchDefault>Consulta</span>
+                  </ng-container>
+                </span>
+                <span class="date">{{ (c.fecha || c.creadoEn) | date:'short' }}</span>
+              </div>
+
+              <div class="subject">{{ c.asunto }}</div>
+              <div class="msg">{{ c.mensaje }}</div>
+
+              <div class="resp" *ngIf="c.respuesta">
+                <strong>Respuesta:</strong> {{ c.respuesta }}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>

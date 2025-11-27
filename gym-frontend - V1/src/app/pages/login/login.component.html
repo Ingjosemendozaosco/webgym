@@ -1,0 +1,83 @@
+<div class="auth-hero">
+  <!-- velo global con blur (más ligero) -->
+  <div class="veil"></div>
+
+  <!-- Tarjeta de vidrio -->
+  <section class="glass-card">
+    <!-- Bienvenida (tinte rojo translúcido) -->
+    <aside class="welcome">
+      <img
+        class="brand"
+        src="https://res.cloudinary.com/dyivnbh3x/image/upload/f_auto,q_auto,w_88/logogym_xk98yu.jpg"
+        alt="AngelGyms" width="56" height="56"
+        loading="eager" decoding="async"
+      />
+      <h2>¡Bienvenido!</h2>
+      <p>Constancia, foco y energía.</p>
+    </aside>
+
+    <!-- Formulario (panel translúcido con blur) -->
+    <section class="panel">
+      <header class="head">
+        <span class="icon">🏋️‍♂️</span>
+        <h1>Iniciar sesión</h1>
+        <p class="muted">Ingresa tus credenciales para continuar</p>
+      </header>
+
+      <form class="form" (ngSubmit)="submit()">
+        <label class="field">
+          <span class="label">Correo</span>
+          <div class="control">
+            <span class="i">✉️</span>
+            <input
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              required
+              autocomplete="email"
+              placeholder="tucorreo@dominio.com"
+              (focus)="onFocus()" (blur)="onBlur()" (input)="onTyping()"
+            />
+          </div>
+        </label>
+
+        <label class="field">
+          <span class="label">Contraseña</span>
+          <div class="control">
+            <span class="i">🔒</span>
+            <input
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              required
+              autocomplete="current-password"
+              placeholder="********"
+              (focus)="onFocus()" (blur)="onBlur()" (input)="onTyping()"
+            />
+          </div>
+        </label>
+
+        <div class="row tiny">
+          <label class="remember">
+            <input type="checkbox" [(ngModel)]="remember" name="remember" />
+            <span>Recordarme</span>
+          </label>
+          <a class="link" routerLink="/recover">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button class="btn primary" type="submit" [disabled]="loading || !email || !password">
+          <span class="spinner" *ngIf="loading"></span>
+          <span>{{ loading ? 'Ingresando…' : 'Iniciar sesión' }}</span>
+        </button>
+
+        <p class="alt">
+          ¿No tienes cuenta?
+          <a routerLink="/register">Crear cuenta</a>
+        </p>
+
+        <p class="error" *ngIf="error">{{ error }}</p>
+        <p class="msg" *ngIf="msg">{{ msg }}</p>
+      </form>
+    </section>
+  </section>
+</div>

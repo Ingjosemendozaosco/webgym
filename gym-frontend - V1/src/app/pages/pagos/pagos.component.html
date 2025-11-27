@@ -1,0 +1,63 @@
+<section class="page pagos">
+  <div class="hero">
+    <div class="wrap">
+      <h1 class="titulo"> Elige tu método de pago</h1>
+      <div class="card">
+        <div class="metodos">
+          <div class="metodo-selector">
+            <label>
+              <input type="radio" name="metodo" [(ngModel)]="metodo" value="MERCADO_PAGO" />
+              Mercado Pago (tarjeta, Yape, etc.)
+            </label>
+            <label>
+              <input type="radio" name="metodo" [(ngModel)]="metodo" value="PAYPAL" />
+              PayPal
+            </label>
+          </div>
+          <label>
+            Teléfono
+            <input [(ngModel)]="telefono" type="tel" placeholder="Ingresa tu teléfono" />
+          </label>
+          <label class="dir">
+            Dirección de envío
+            <input [(ngModel)]="direccion" type="text" placeholder="Ingresa tu dirección" />
+          </label>
+          <div class="actions">
+            <button class="outline" (click)="openUpdateModal()" [disabled]="!telefonoValido || !direccion || !pendienteActualizar">Actualizar</button>
+          </div>
+          <div class="cta">
+            <button class="pill" [class.loading]="isPaying" (click)="iniciar()" [disabled]="!puedePagar" aria-busy="{{isPaying}}">
+              <span class="spinner" *ngIf="isPaying"></span>
+              {{ isPaying ? 'Procesando…' : 'Continuar al pago' }}
+            </button>
+          </div>
+        </div>
+        <div class="resumen">
+          <div class="total">Total a pagar: <strong>S/ {{monto | number:'1.2-2'}}</strong></div>
+          <div *ngIf="telefono && direccion">Tu compra se enviará a: <strong>{{direccion}}</strong>. Te notificaremos al <strong>{{telefono}}</strong> cuando esté en camino.</div>
+        </div>
+        <div class="resumen" *ngIf="pedidoId">
+          <div>Pedido: <strong>#{{pedidoId}}</strong></div>
+          <div>Monto: <strong>S/ {{monto | number:'1.2-2'}}</strong></div>
+          <div>Estado: <strong>{{estadoPago || 'PENDIENTE'}}</strong></div>
+        </div>
+      </div>
+      
+      <div class="modal" *ngIf="showUpdateModal">
+        <div class="modal-backdrop" (click)="closeModal()"></div>
+        <div class="modal-content">
+          <h3>Confirmar datos de envío</h3>
+          <p class="sub">Estos datos se guardarán en tu perfil.</p>
+          <p>Teléfono: <strong>{{telefono}}</strong></p>
+          <p>Dirección: <strong>{{direccion}}</strong></p>
+          <div class="actions">
+            <button class="outline" (click)="closeModal()">Cancelar</button>
+            <button class="pill" (click)="confirmUpdate()" [disabled]="isUpdating">{{ isUpdating ? 'Guardando...' : 'Actualizar' }}</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="toast" *ngIf="showToast">{{toastMsg}}</div>
+    </div>
+  </div>
+</section>

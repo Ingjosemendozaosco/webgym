@@ -1,0 +1,71 @@
+<section class="crud-page">
+  <div class="crud-page__container">
+    <app-trabajador-nav></app-trabajador-nav>
+
+    <header class="crud-header">
+      <div class="crud-header__title">
+        <h1>Planes adquiridos</h1>
+        <p class="crud-header__subtitle">Controla las suscripciones a planes de entrenamiento y su vigencia.</p>
+      </div>
+      <div class="crud-header__actions">
+        <button class="crud-button" type="button" (click)="cargar()">Refrescar</button>
+      </div>
+    </header>
+
+    <div class="crud-card crud-card--filters">
+      <label class="crud-filter">
+        <span>Estado</span>
+        <select class="crud-control" [(ngModel)]="filtroEstado" (change)="cargar()">
+          <option *ngFor="let opt of estadoOpciones" [ngValue]="opt.value">{{opt.label}}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="crud-card crud-card--table" *ngIf="!cargando">
+      <div class="crud-scroll">
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Nombre</th>
+              <th>Estado</th>
+              <th>Monto</th>
+              <th>Inicio</th>
+              <th>Fin</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of planes">
+              <td data-label="ID">{{s.id}}</td>
+              <td data-label="Usuario">{{s.usuarioId || '—'}}</td>
+              <td data-label="Nombre" class="crud-ellipsis">{{s.nombre || '—'}}</td>
+              <td data-label="Estado">
+                <span class="crud-badge" [ngClass]="estadoClase(s.estado)">{{estadoLabel(s.estado)}}</span>
+              </td>
+              <td data-label="Monto">{{s.monto != null ? (s.monto | number:'1.2-2') : '—'}}</td>
+              <td data-label="Inicio">{{F(s.fechaInicio)}}</td>
+              <td data-label="Fin">{{F(s.fechaFin)}}</td>
+              <td data-label="Acciones" class="crud-toolbar">
+                <ng-container *ngIf="s.estado === 'PENDIENTE_PAGO'">
+                  <button class="crud-button is-primary" type="button" (click)="activar(s.id)">Activar</button>
+                  <button class="crud-button is-danger" type="button" (click)="rechazar(s.id)">Rechazar</button>
+                </ng-container>
+                <ng-container *ngIf="s.estado === 'ACTIVA'">
+                  <button class="crud-button is-warning" type="button" (click)="cancelar(s.id)">Cancelar</button>
+                </ng-container>
+              </td>
+            </tr>
+            <tr *ngIf="(planes?.length||0)===0">
+              <td colspan="8" class="crud-empty">No hay registros para los filtros.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="crud-card crud-empty">Cargando…</div>
+    <div *ngIf="error" class="crud-card crud-empty">{{error}}</div>
+  </div>
+</section>

@@ -1,0 +1,51 @@
+<div class="auth-hero">
+  <div class="veil"></div>
+
+  <section class="glass-card">
+    <aside class="welcome">
+      <img
+        class="brand"
+        src="https://res.cloudinary.com/dyivnbh3x/image/upload/f_auto,q_auto,w_88/logogym_xk98yu.jpg"
+        alt="AngelGyms" width="56" height="56"
+        loading="eager" decoding="async"
+      />
+      <h2>Recupera tu acceso</h2>
+      <p>Te enviaremos un código de recuperación.</p>
+    </aside>
+
+    <section class="panel">
+      <header class="head">
+        <span class="icon">🔑</span>
+        <h1>Recuperar contraseña</h1>
+        <p class="muted">Primero envíanos tu correo. Te mandaremos un código.</p>
+      </header>
+
+      <form #formStep1="ngForm" (ngSubmit)="sendCode(formStep1)" class="form">
+        <label class="field">
+          <span class="label">Correo</span>
+          <div class="control">
+            <span class="i">✉️</span>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              autocomplete="email"
+              placeholder="tucorreo@dominio.com"
+            />
+          </div>
+        </label>
+
+        <button class="btn primary" type="submit" [disabled]="loading || !email">
+          <span class="spinner" *ngIf="loading"></span>
+          <span>{{ loading ? 'Enviando código…' : 'Enviar código' }}</span>
+        </button>
+
+        <p class="msg" *ngIf="msg">{{ msg }}</p>
+        <p class="error" *ngIf="error">{{ error }}</p>
+      </form>
+
+      <p class="alt"><a routerLink="/login">Volver al inicio de sesión</a></p>
+    </section>
+  </section>
+</div>

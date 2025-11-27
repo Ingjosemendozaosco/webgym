@@ -1,0 +1,138 @@
+<section class="page planes">
+  <div class="hero">
+    <div class="hero__inner">
+      <h1>Planes personalizados</h1>
+      <p>Escoge el plan ideal para tus objetivos. Los planes activos están listos para adquirirse al instante.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="info-banner">Solo puedes adquirir planes <strong>ACTIVOS</strong>. Los que están inactivos aparecerán en gris y no se pueden seleccionar.</div>
+
+    <div class="grid">
+      <article class="plan-card" *ngFor="let p of data" [ngClass]="{disabled: p.estado !== 'ACTIVO', 'is-active': activePlanIds.has(p.id)}" aria-disabled="{{p.estado !== 'ACTIVO'}}">
+        <header class="plan-card__media" [style.background-image]="p.imagen ? 'url(' + p.imagen + ')' : null">
+          <span class="plan-card__status" [ngClass]="{ ok: p.estado==='ACTIVO', off: p.estado==='INACTIVO', warn: p.estado==='SOLICITADO' }">{{ p.estado || 'ACTIVO' }}</span>
+        </header>
+
+        <div class="plan-card__body">
+          <div class="plan-card__title">
+            <h3>{{ p.nombre }}</h3>
+            <span class="plan-card__duration">{{ p.duracionDias || 30 }} días</span>
+          </div>
+
+          <div class="rating" *ngIf="hasRating(p)">
+            <span>⭐ {{ ratingResumen[p.id].promedio | number:'1.0-1' }}</span>
+            <span class="rating-count">· {{ ratingResumen[p.id].cantidad }} {{ ratingResumen[p.id].cantidad === 1 ? 'reseña' : 'reseñas' }}</span>
+          </div>
+
+          <p class="plan-card__description">{{ p.descripcion }}</p>
+
+          <div class="plan-card__chips">
+            <span class="chip success" *ngIf="p.descuento && p.descuento>0">
+              <span class="icon">🏷️</span>
+              Descuento del {{ p.descuento }}% en el carrito
+            </span>
+            <span class="chip info" *ngIf="p.horasMax">
+              <span class="icon">⏳</span>
+              Hasta {{ p.horasMax }}h por reserva
+            </span>
+          </div>
+
+          <ul class="plan-card__benefits" *ngIf="p.beneficiosList?.length">
+            <li *ngFor="let b of p.beneficiosList">{{ b }}</li>
+          </ul>
+
+          <div class="plan-card__price">
+            <span class="amount">S/ {{ p.precio | number:'1.2-2' }}</span>
+            <span class="hint" *ngIf="activePlanIds.has(p.id)">Plan activo</span>
+          </div>
+
+          <div class="plan-card__actions">
+            <button class="btn primary"
+                    [disabled]="p.estado !== 'ACTIVO' || activePlanIds.has(p.id) || processingPlanId !== null"
+                    (click)="suscribirse(p)">
+              {{ processingPlanId === p.id ? 'Procesando...' : (activePlanIds.has(p.id) ? 'Activa' : 'Suscribirse') }}
+            </button>
+            <button class="btn ghost" (click)="verMas(p)" [disabled]="p.estado !== 'ACTIVO'">Ver más</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="toast success" *ngIf="showToast">{{toastMsg}}</div>
+
+  <div class="modal" *ngIf="showModal" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal__media" [style.background-image]="selected?.imagen ? 'url(' + selected?.imagen + ')' : null"></div>
+      <div class="modal__body">
+        <div *ngIf="selected?.estado !== 'ACTIVO'" class="alert">Este plan no está disponible por ahora (INACTIVO).</div>
+        <h3>{{selected?.nombre}}</h3>
+        <p class="muted">{{selected?.descripcion}}</p>
+
+        <div class="rating" *ngIf="hasRating(selected)">
+          <span>⭐ {{ ratingResumen[selected.id].promedio | number:'1.0-1' }}</span>
+          <span class="rating-count">· {{ ratingResumen[selected.id].cantidad }} {{ ratingResumen[selected.id].cantidad === 1 ? 'reseña' : 'reseñas' }}</span>
+        </div>
+
+        <div class="rating-form">
+          <label>Tu calificación (estrellas)</label>
+          <select [(ngModel)]="ratingForm.puntuacion">
+            <option [ngValue]="5">5</option>
+            <option [ngValue]="4">4</option>
+            <option [ngValue]="3">3</option>
+            <option [ngValue]="2">2</option>
+            <option [ngValue]="1">1</option>
+          </select>
+          <label>¿Cómo fue tu experiencia?</label>
+          <select [(ngModel)]="ratingForm.comentario">
+            <option [ngValue]="''" disabled>Selecciona una opción</option>
+            <option [ngValue]="'EXCELENTE'">Excelente</option>
+            <option [ngValue]="'MUY_BUENA'">Muy buena</option>
+            <option [ngValue]="'BUENA'">Buena</option>
+            <option [ngValue]="'REGULAR'">Regular</option>
+            <option [ngValue]="'MALA'">Mala</option>
+          </select>
+          <div class="modal__actions">
+            <button class="btn primary" type="button" (click)="enviarCalificacionPlan()">Enviar reseña</button>
+          </div>
+        </div>
+
+        <div class="modal__chips">
+          <span class="chip success" *ngIf="selected?.descuento && selected?.descuento>0">
+            <img class="icon" src="assets/icons/discount.jpg" alt="descuento"/>
+            Descuento {{ selected?.descuento }}% en productos
+          </span>
+          <span class="chip info" *ngIf="selected?.horasMax">
+            <img class="icon" src="assets/icons/hourglass.jpg" alt="horas"/>
+            Hasta {{ selected?.horasMax }}h por reserva
+          </span>
+        </div>
+
+        <div class="modal__columns" *ngIf="selected?.beneficiosList?.length">
+          <div>
+            <h4>Beneficios incluidos</h4>
+            <ul>
+              <li *ngFor="let b of selected?.beneficiosList">{{b}}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="modal__price">
+          <span class="amount">S/ {{ selected?.precio | number:'1.2-2' }}</span>
+          <span class="hint">{{ selected?.duracionDias || 30 }} días</span>
+        </div>
+
+        <div class="modal__actions">
+          <button class="btn primary"
+                  [disabled]="activePlanIds.has(selected?.id) || processingPlanId !== null"
+                  (click)="suscribirse(selected)">
+            {{ processingPlanId === selected?.id ? 'Procesando...' : (activePlanIds.has(selected?.id) ? 'Activa' : 'Suscribirse') }}
+          </button>
+          <button class="btn ghost" (click)="cerrarModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,73 @@
+<app-trabajador-nav></app-trabajador-nav>
+<section class="page trabajador-soporte">
+  <h1>Soporte</h1>
+  <div class="filters">
+    <label>Estado
+      <select [(ngModel)]="estado" (change)="buscar(0)">
+        <option value="">Todos</option>
+        <option *ngFor="let e of estados" [value]="e">{{e}}</option>
+      </select>
+    </label>
+    <button type="button" (click)="buscar(0)">Actualizar</button>
+  </div>
+
+  <div class="table-wrapper" *ngIf="!cargando">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Asunto</th>
+          <th>Mensaje</th>
+          <th>Estado</th>
+          <th>Creación</th>
+          <th>Respuesta</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of (data?.content || [])">
+          <td>{{r.id}}</td>
+          <td>{{r.usuario?.email || r.usuarioId || '—'}}</td>
+          <td class="w">{{r.asunto}}</td>
+          <td class="w">{{r.mensaje}}</td>
+          <td>{{r.estado}}</td>
+          <td>{{r.fechaCreacion | date:'short'}}</td>
+          <td class="w">{{r.respuesta || '—'}}</td>
+          <td class="actions">
+            <button type="button" (click)="verResponder(r)">Responder</button>
+            <button type="button" [disabled]="r.estado==='CERRADA'" (click)="cerrarTicket(r)">Cerrar</button>
+          </td>
+        </tr>
+        <tr *ngIf="(data?.content||[]).length===0">
+          <td colspan="8" class="muted">No hay consultas para los filtros.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pager" *ngIf="pageCount()>1">
+      <button [disabled]="!canPrev()" (click)="buscar(page-1)">Anterior</button>
+      <span>Página {{(data?.number||0)+1}} / {{pageCount()}}</span>
+      <button [disabled]="!canNext()" (click)="buscar(page+1)">Siguiente</button>
+    </div>
+  </div>
+  <div *ngIf="cargando" class="muted">Cargando…</div>
+
+  <!-- Modal responder -->
+  <div class="modal-backdrop" *ngIf="modal" (click)="modal=false"></div>
+  <div class="modal" *ngIf="modal">
+    <div class="modal-header">
+      <h3>Responder #{{sel?.id}} — {{sel?.asunto}}</h3>
+      <button class="close" type="button" (click)="modal=false">×</button>
+    </div>
+    <div class="modal-body">
+      <label>Respuesta</label>
+      <textarea rows="6" [(ngModel)]="respuesta"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button type="button" (click)="modal=false">Cancelar</button>
+      <button type="button" class="primary" (click)="enviarRespuesta()">Enviar</button>
+    </div>
+  </div>
+
+  <div *ngIf="toast" class="toast">{{toast}}</div>
+</section>

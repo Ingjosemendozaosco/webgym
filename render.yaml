@@ -1,0 +1,62 @@
+services:
+  - type: web
+    name: webgym-backend
+    rootDir: backendgym
+    env: maven
+    plan: free
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/backendgym-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+
+      # Base de datos (se leen en application.properties como DB_*)
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+      # JWT
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRATION
+        sync: false
+
+      # Email
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_PORT
+        sync: false
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+
+      # Mercado Pago
+      - key: MP_ACCESS_TOKEN
+        sync: false
+      - key: MP_BACK_URL
+        sync: false
+      - key: MP_NOTIFICATION_URL
+        sync: false
+
+      # PayPal
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_SECRET
+        sync: false
+      - key: PAYPAL_BASE_URL
+        sync: false
+
+      # Frontend
+      - key: FRONTEND_URL
+        sync: false
+
+  - type: static_site
+    name: webgym-frontend
+    rootDir: "gym-frontend - V1"
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist/gym-frontend/browser

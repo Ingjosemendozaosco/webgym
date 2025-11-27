@@ -1,0 +1,68 @@
+.page.gracias {
+  position: fixed; /* fija solo esta página al viewport */
+  inset: 0; /* top/right/bottom/left 0 */
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden; /* sin scroll en esta página */
+  text-align: center;
+  background: #000; /* evita franja blanca en fondo por defecto */
+}
+
+.page.gracias .backdrop {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://previews.123rf.com/images/h4ckermodify/h4ckermodify2304/h4ckermodify230400217/201877840-gym-or-fitness-with-sunset-light-background-for-web-design-template-website.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  filter: brightness(0.7);
+}
+
+.page.gracias .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.55));
+}
+
+.page.gracias .content {
+  position: relative;
+  z-index: 1;
+  padding: 16px;
+  max-width: min(760px, 92%);
+  color: #fff;
+}
+
+.page.gracias h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  letter-spacing: 0.3px;
+}
+
+.page.gracias .muted {
+  color: #f0f0f0;
+  margin: 0 0 18px;
+}
+
+.page.gracias .acciones {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.page.gracias .btn {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.page.gracias .btn.prim { background: #fff; color: #111; box-shadow: 0 6px 14px rgba(0,0,0,0.25); }
+.page.gracias .btn.sec { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.35); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+
+.page.gracias .btn:hover { transform: translateY(-1px); }

@@ -1,0 +1,66 @@
+<div class="auth-hero">
+  <div class="veil"></div>
+
+  <section class="glass-card">
+    <aside class="welcome">
+      <img
+        class="brand"
+        src="https://res.cloudinary.com/dyivnbh3x/image/upload/f_auto,q_auto,w_88/logogym_xk98yu.jpg"
+        alt="AngelGyms" width="56" height="56"
+        loading="eager" decoding="async"
+      />
+      <h2>Ingresa tu código</h2>
+      <p>Revisa tu correo y escribe el código de 6 letras.</p>
+    </aside>
+
+    <section class="panel">
+      <header class="head">
+        <span class="icon">📨</span>
+        <h1>Verificar código</h1>
+        <p class="muted">Primero verificamos el código, luego eliges tu nueva contraseña.</p>
+      </header>
+
+      <form #form="ngForm" (ngSubmit)="submit(form)" class="form">
+        <label class="field">
+          <span class="label">Correo</span>
+          <div class="control">
+            <span class="i">✉️</span>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              [readonly]="true"
+              autocomplete="email"
+            />
+          </div>
+        </label>
+
+        <label class="field">
+          <span class="label">Código de recuperación (6 letras)</span>
+          <div class="control">
+            <span class="i">🔑</span>
+            <input
+              type="text"
+              name="code"
+              [(ngModel)]="code"
+              required
+              maxlength="6"
+              placeholder="ABCDEF"
+            />
+          </div>
+        </label>
+
+        <button class="btn primary" type="submit" [disabled]="loading || !email || !code">
+          <span class="spinner" *ngIf="loading"></span>
+          <span>Siguiente</span>
+        </button>
+
+        <p class="msg" *ngIf="msg">{{ msg }}</p>
+        <p class="error" *ngIf="error">{{ error }}</p>
+      </form>
+
+      <p class="alt"><a routerLink="/login">Volver al inicio de sesión</a></p>
+    </section>
+  </section>
+</div>

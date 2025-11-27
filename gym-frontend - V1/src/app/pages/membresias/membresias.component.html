@@ -1,0 +1,171 @@
+<section class="page members-hero">
+  <!-- HERO con fondo -->
+  <div class="hero">
+    <div class="hero__inner">
+      <h1>Opciones de membresía</h1>
+      <p>Todas las membresías incluyen acceso completo a nuestros servicios, clases, zona de pesas y más.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Nota -->
+    <div class="info-banner">
+      Solo puedes adquirir membresías <strong>ACTIVAS</strong>. Las inactivas aparecerán en gris y no se pueden seleccionar.
+    </div>
+
+    <!-- GRID tipo “pricing cards” -->
+    <div class="grid">
+      <article class="goldcard"
+               *ngFor="let m of data"
+               [ngClass]="{ 'disabled': !isEnabled(m) }"
+               aria-disabled="{{!isEnabled(m)}}">
+
+        <!-- Cabecera -->
+        <header class="goldcard__head">
+          <h3 class="goldcard__title">{{ m.nombre }}</h3>
+          <p class="goldcard__muted">{{ m.descripcion }}</p>
+          <div class="rating" *ngIf="hasRating(m)">
+            <span>⭐ {{ ratingResumen[m.id].promedio | number:'1.0-1' }}</span>
+            <span class="rating-count">· {{ ratingResumen[m.id].cantidad }} {{ ratingResumen[m.id].cantidad === 1 ? 'reseña' : 'reseñas' }}</span>
+          </div>
+        </header>
+
+        <!-- Beneficios (máx 6 visibles para mantener limpieza) -->
+        <ul class="goldcard__list" *ngIf="m.beneficiosList?.length">
+          <li *ngFor="let b of m.beneficiosList | slice:0:6">{{ b }}</li>
+        </ul>
+
+        <!-- Precio -->
+        <div class="goldcard__price">
+          <div class="now">
+            <span class="amount">S/ {{ m.precio | number:'1.2-2' }}</span>
+            <span class="per">/ {{ m.duracionDias || m.duracion_dias || 30 }} días</span>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="goldcard__cta">
+          <button class="btn primary"
+                  [disabled]="!isEnabled(m) || activeMembresiaIds.has(m.id) || processingMembresiaId !== null"
+                  (click)="adquirir(m)">
+            {{ processingMembresiaId === m.id ? 'Procesando...' : (activeMembresiaIds.has(m.id) ? 'Activa' : 'Consultar tarifas') }}
+          </button>
+          <button class="btn ghost" (click)="verMas(m)" [disabled]="!isEnabled(m)">Aprende más</button>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast success" *ngIf="showToast">{{toastMsg}}</div>
+
+  <!-- Modal detalles (respetando tus bindings) -->
+  <div class="modal" *ngIf="showModal" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-hero">
+        <img [src]="selected?.imagen || 'https://dummyimage.com/320x160/ffffff/000000.png&text=Angel+Gym'"
+             alt="{{selected?.nombre}}">
+      </div>
+      <div class="modal-info">
+        <div *ngIf="!isEnabled(selected)" class="alert">Esta membresía no está disponible por ahora (INACTIVO).</div>
+        <h3>{{selected?.nombre}}</h3>
+        <p class="muted">{{selected?.descripcion}}</p>
+
+        <div class="rating" *ngIf="hasRating(selected)">
+          <span>⭐ {{ ratingResumen[selected.id].promedio | number:'1.0-1' }}</span>
+          <span class="rating-count">· {{ ratingResumen[selected.id].cantidad }} {{ ratingResumen[selected.id].cantidad === 1 ? 'reseña' : 'reseñas' }}</span>
+        </div>
+
+        <div class="rating-form">
+          <label>Tu calificación (estrellas)</label>
+          <select [(ngModel)]="ratingForm.puntuacion">
+            <option [ngValue]="5">5</option>
+            <option [ngValue]="4">4</option>
+            <option [ngValue]="3">3</option>
+            <option [ngValue]="2">2</option>
+            <option [ngValue]="1">1</option>
+          </select>
+          <label>¿Cómo fue tu experiencia?</label>
+          <select [(ngModel)]="ratingForm.comentario">
+            <option [ngValue]="''" disabled>Selecciona una opción</option>
+            <option [ngValue]="'EXCELENTE'">Excelente</option>
+            <option [ngValue]="'MUY_BUENA'">Muy buena</option>
+            <option [ngValue]="'BUENA'">Buena</option>
+            <option [ngValue]="'REGULAR'">Regular</option>
+            <option [ngValue]="'MALA'">Mala</option>
+          </select>
+          <div class="actions">
+            <button class="btn primary" type="button" (click)="enviarCalificacionMembresia()">Enviar reseña</button>
+          </div>
+        </div>
+
+        <div class="cols">
+          <div>
+            <h4>Beneficios</h4>
+            <ul>
+              <li *ngFor="let b of selected?.beneficiosList">{{b}}</li>
+            </ul>
+          </div>
+          <div *ngIf="selected?.videosList?.length">
+            <h4>Videos incluidos</h4>
+            <ul>
+              <li *ngFor="let v of selected?.videosList">{{v}}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="price price--modal">
+          <div class="now">
+            <span class="amount">S/ {{ selected?.precio | number:'1.2-2' }}</span>
+            <span class="per">/ {{ selected?.duracionDias || selected?.duracion_dias || 30 }} días</span>
+          </div>
+          <div *ngIf="selected?.descuento && selected?.descuento>0" class="discount-note">
+            Descuento del {{ selected?.descuento }}% en productos
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary"
+                  [disabled]="selected?.estado !== 'ACTIVO' || activeMembresiaIds.has(selected?.id) || processingMembresiaId !== null"
+                  (click)="adquirir(selected)">
+            {{ processingMembresiaId === selected?.id ? 'Procesando…' : (activeMembresiaIds.has(selected?.id) ? 'Activa' : 'Adquirir') }}
+          </button>
+          <button class="btn ghost" (click)="cerrarModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pagar online (sin cambios lógicos) -->
+  <div class="modal" *ngIf="showPayModal" (click)="cerrarPay()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-info full">
+        <h3>Pagar online</h3>
+        <p class="muted">{{payTarget?.nombre}} — Monto sugerido: S/ {{ payTarget?.precio | number:'1.2-2' }}</p>
+        <div class="cols">
+          <div>
+            <label>Método de pago</label>
+            <select [(ngModel)]="payForm.metodoPago">
+              <option value="ONLINE">ONLINE</option>
+              <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+              <option value="YAPE">YAPE</option>
+              <option value="PLIN">PLIN</option>
+            </select>
+          </div>
+          <div>
+            <label>Monto (S/)</label>
+            <input type="number" step="0.01" [(ngModel)]="payForm.monto" />
+          </div>
+        </div>
+        <div>
+          <label>Comprobante (URL)</label>
+          <input type="url" [(ngModel)]="payForm.comprobanteUrl" placeholder="https://..." />
+        </div>
+        <div class="actions">
+          <button class="btn primary" (click)="pagar()">Pagar</button>
+          <button class="btn ghost" (click)="cerrarPay()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

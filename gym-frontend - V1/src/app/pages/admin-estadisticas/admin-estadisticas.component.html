@@ -1,0 +1,236 @@
+<section class="page admin-estadisticas">
+  <app-admin-nav></app-admin-nav>
+  <h1>Estadísticas</h1>
+  <div class="filters">
+    <div class="range">
+      <label>Desde<input type="date" [(ngModel)]="from"></label>
+      <label>Hasta<input type="date" [(ngModel)]="to"></label>
+      <label>Granularidad
+        <select [(ngModel)]="groupBy">
+          <option value="day">Día</option>
+          <option value="week">Semana</option>
+          <option value="month">Mes</option>
+        </select>
+      </label>
+      <button (click)="load()">Aplicar</button>
+    </div>
+    <div class="presets">
+      <button (click)="preset(7)">7 días</button>
+      <button (click)="preset(30)">30 días</button>
+    </div>
+    <div class="panel-actions">
+      <button (click)="exportUltimosCsv()">Exportar CSV</button>
+    </div>
+  </div>
+
+  <div class="panels-grid">
+    <div class="panel">
+      <div class="panel-header">Top productos por ingresos</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Producto</th><th>Ingresos</th><th>Unidades</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of (topsData?.productosIngresos||[]); let i = index">
+              <td>{{i+1}}</td>
+              <td>{{x.nombre}}</td>
+              <td>{{x.ingresos | currency:kpis.moneda:'symbol-narrow'}}</td>
+              <td>{{x.unidades}}</td>
+            </tr>
+            <tr *ngIf="(topsData?.productosIngresos||[]).length===0"><td colspan="4" class="muted">Sin registros.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-actions">
+        <button (click)="exportTopCsv('productosIngresos')">Exportar CSV</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">Top productos por unidades</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Producto</th><th>Ingresos</th><th>Unidades</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of (topsData?.productosUnidades||[]); let i = index">
+              <td>{{i+1}}</td>
+              <td>{{x.nombre}}</td>
+              <td>{{x.ingresos | currency:kpis.moneda:'symbol-narrow'}}</td>
+              <td>{{x.unidades}}</td>
+            </tr>
+            <tr *ngIf="(topsData?.productosUnidades||[]).length===0"><td colspan="4" class="muted">Sin registros.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-actions">
+        <button (click)="exportTopCsv('productosUnidades')">Exportar CSV</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">Top planes</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Plan</th><th>Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of (topsData?.planes||[]); let i = index">
+              <td>{{i+1}}</td>
+              <td>{{x.nombre}}</td>
+              <td>{{x.cantidad}}</td>
+            </tr>
+            <tr *ngIf="(topsData?.planes||[]).length===0"><td colspan="3" class="muted">Sin registros.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-actions">
+        <button (click)="exportTopCsv('planes')">Exportar CSV</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">Top membresías</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Membresía</th><th>Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of (topsData?.membresias||[]); let i = index">
+              <td>{{i+1}}</td>
+              <td>{{x.nombre}}</td>
+              <td>{{x.cantidad}}</td>
+            </tr>
+            <tr *ngIf="(topsData?.membresias||[]).length===0"><td colspan="3" class="muted">Sin registros.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-actions">
+        <button (click)="exportTopCsv('membresias')">Exportar CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="label">Ingresos</div>
+      <div class="value">{{kpis.ingresos | currency:kpis.moneda:'symbol-narrow'}}
+        <span class="delta" [class.up]="(deltas.ingresos||0) >= 0" [class.down]="(deltas.ingresos||0) < 0">
+          {{ (deltas.ingresos ?? 0) | number:'1.0-1' }}%
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label">Pedidos</div>
+      <div class="value">{{kpis.pedidos}}
+        <span class="delta" [class.up]="(deltas.pedidos||0) >= 0" [class.down]="(deltas.pedidos||0) < 0">
+          {{ (deltas.pedidos ?? 0) | number:'1.0-1' }}%
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label">Reservas</div>
+      <div class="value">{{kpis.reservas}}
+        <span class="delta" [class.up]="(deltas.reservas||0) >= 0" [class.down]="(deltas.reservas||0) < 0">
+          {{ (deltas.reservas ?? 0) | number:'1.0-1' }}%
+        </span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label">Suscripciones activas</div>
+      <div class="value">{{kpis.suscripcionesActivas}}</div>
+    </div>
+  </div>
+
+  <div class="panels-grid charts">
+    <div class="panel">
+      <div class="panel-header">Ingresos</div>
+      <div class="chart" *ngIf="!loading && serie.length">
+        <svg preserveAspectRatio="none" viewBox="0 0 100 40">
+          <polyline fill="none" stroke="#2563eb" stroke-width="1.5" [attr.points]="points()"></polyline>
+        </svg>
+        <div class="ticks">
+          <div class="tick" *ngFor="let p of serie">{{p.t}}</div>
+        </div>
+      </div>
+      <div class="muted" *ngIf="!loading && !serie.length">Sin datos para el rango.</div>
+      <div class="muted" *ngIf="loading">Cargando…</div>
+      <div class="panel-actions">
+        <button (click)="exportSeriesCsv('ingresos')">Exportar CSV</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">Pedidos</div>
+      <div class="chart" *ngIf="seriePedidos.length">
+        <svg preserveAspectRatio="none" viewBox="0 0 100 40">
+          <polyline fill="none" stroke="#16a34a" stroke-width="1.5" [attr.points]="pointsOf(seriePedidos)"></polyline>
+        </svg>
+        <div class="ticks">
+          <div class="tick" *ngFor="let p of seriePedidos">{{p.t}}</div>
+        </div>
+      </div>
+      <div class="muted" *ngIf="!seriePedidos.length">Sin datos.</div>
+      <div class="panel-actions">
+        <button (click)="exportSeriesCsv('pedidos')">Exportar CSV</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">Reservas</div>
+      <div class="chart" *ngIf="serieReservas.length">
+        <svg preserveAspectRatio="none" viewBox="0 0 100 40">
+          <polyline fill="none" stroke="#f59e0b" stroke-width="1.5" [attr.points]="pointsOf(serieReservas)"></polyline>
+        </svg>
+        <div class="ticks">
+          <div class="tick" *ngFor="let p of serieReservas">{{p.t}}</div>
+        </div>
+      </div>
+      <div class="muted" *ngIf="!serieReservas.length">Sin datos.</div>
+      <div class="panel-actions">
+        <button (click)="exportSeriesCsv('reservas')">Exportar CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">Últimos pedidos</div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of ultimos">
+            <td>{{x.id}}</td>
+            <td>{{x.usuarioId || '—'}}</td>
+            <td>{{x.fecha | date:'short'}}</td>
+            <td>{{x.estado}}</td>
+            <td>{{x.total | currency:kpis.moneda:'symbol-narrow'}}</td>
+          </tr>
+          <tr *ngIf="(ultimos||[]).length===0"><td colspan="5" class="muted">Sin registros.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="error" *ngIf="error">{{error}}</div>
+</section>

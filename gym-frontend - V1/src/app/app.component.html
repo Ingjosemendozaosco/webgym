@@ -1,0 +1,50 @@
+<header class="shell" *ngIf="!isAdminLanding() && !isAuthRoute()">
+  <nav class="nav nav--bar">
+    <div class="nav-inner">
+      <!-- IZQUIERDA: logo + nombre -->
+      <a class="brand" routerLink="/">
+        <img
+          class="brand-logo"
+          src="https://res.cloudinary.com/dyivnbh3x/image/upload/f_auto,q_auto,w_220/logogym_xk98yu.jpg"
+          alt="AngelGyms logo" width="220" height="56"
+          loading="eager" decoding="async" fetchpriority="high"
+        />
+        <span class="brand-name">AngelGyms</span>
+      </a>
+
+      <!-- CENTRO: menú centrado -->
+      <ul class="links links--center">
+        <li><a class="pill" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a></li>
+        <li><a class="pill" routerLink="/membresias" routerLinkActive="active">Membresía</a></li>
+        <li><a class="pill" routerLink="/planes" routerLinkActive="active">Planes</a></li>
+        <li><a class="pill" routerLink="/productos" routerLinkActive="active">Productos</a></li>
+        <li><a class="pill" routerLink="/promociones" routerLinkActive="active">Promociones</a></li>
+        <li><a class="pill" routerLink="/reservas" routerLinkActive="active">Reservas</a></li>
+        <li><a class="pill" routerLink="/consultas" routerLinkActive="active">Consultas</a></li>
+        <li *ngIf="auth.isLogged()"><a class="pill" routerLink="/videos" routerLinkActive="active">Videos</a></li>
+        <li><a class="pill" routerLink="/perfil" routerLinkActive="active">Perfil</a></li>
+      </ul>
+
+      <!-- DERECHA: acciones -->
+      <div class="nav-actions">
+        <ng-container *ngIf="!auth.isLogged(); else logged">
+          <a class="link-login" routerLink="/login" routerLinkActive="active">Login</a>
+          <a class="cta" routerLink="/register" routerLinkActive="active">Registro</a>
+        </ng-container>
+
+        <ng-template #logged>
+          <span class="who">{{ auth.getEmail() }}</span>
+          <button class="link-logout" (click)="logout()">Salir</button>
+        </ng-template>
+
+        <a class="cart" title="Carrito" routerLink="/carrito">
+          <img src="https://cdn-icons-png.flaticon.com/512/8146/8146003.png" alt="Carrito" width="18" height="18"/>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="container" [ngClass]="{ 'full-bleed': isFullBleedRoute() }">
+  <router-outlet></router-outlet>
+</main>

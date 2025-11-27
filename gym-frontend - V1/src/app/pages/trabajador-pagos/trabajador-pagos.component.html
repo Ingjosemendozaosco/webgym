@@ -1,0 +1,53 @@
+<div class="worker-section">
+  <h2>Pagos</h2>
+  <div class="filters">
+    <label>
+      Estado pago:
+      <select [(ngModel)]="filtroEstado" (change)="cargar()">
+        <option value="">Todos</option>
+        <option>PENDIENTE</option>
+        <option>CONFIRMADO</option>
+        <option>RECHAZADO</option>
+        <option>CANCELADO</option>
+      </select>
+    </label>
+    <button (click)="cargar()">Actualizar</button>
+  </div>
+
+  <div *ngIf="cargando">Cargando...</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+
+  <div class="table-wrapper" *ngIf="!cargando">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Estado</th>
+          <th>Monto</th>
+          <th>Método</th>
+          <th>Ref.</th>
+          <th>Fecha pago</th>
+          <th>Pedido</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pg of pagos">
+          <td>{{pg.id}}</td>
+          <td>{{pg.estado}}</td>
+          <td>{{P(pg.monto)}}</td>
+          <td>{{pg.metodoPago}}</td>
+          <td>{{pg.referenciaPago || '—'}}</td>
+          <td>{{F(pg.fechaPago)}}</td>
+          <td>
+            <div *ngIf="pg.pedido as p">
+              #{{p.id}} • {{P(p.total)}} • {{p.estado}}
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="(pagos?.length||0)===0">
+          <td colspan="7" class="muted">No hay pagos para los filtros.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

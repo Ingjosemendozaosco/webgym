@@ -1,0 +1,82 @@
+<div class="auth-hero">
+  <div class="veil"></div>
+
+  <section class="glass-card">
+    <aside class="welcome">
+      <img
+        class="brand"
+        src="https://res.cloudinary.com/dyivnbh3x/image/upload/f_auto,q_auto,w_88/logogym_xk98yu.jpg"
+        alt="AngelGyms" width="56" height="56"
+        loading="eager" decoding="async"
+      />
+      <h2>Restablecer contraseña</h2>
+      <p>Ingresa el código y tu nueva contraseña.</p>
+    </aside>
+
+    <section class="panel">
+      <header class="head">
+        <span class="icon">🔒</span>
+        <h1>Crear nueva contraseña</h1>
+        <p class="muted">Usa el código de 6 letras que enviamos a tu correo.</p>
+      </header>
+
+      <form #formStep2="ngForm" (ngSubmit)="submit(formStep2)" class="form">
+        <label class="field">
+          <span class="label">Correo</span>
+          <div class="control">
+            <span class="i">✉️</span>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              [readonly]="true"
+              autocomplete="email"
+              placeholder="tucorreo@dominio.com"
+            />
+          </div>
+        </label>
+
+        <label class="field">
+          <span class="label">Nueva contraseña</span>
+          <div class="control">
+            <span class="i">🔒</span>
+            <input
+              [type]="showPass ? 'text' : 'password'"
+              name="newPassword"
+              [(ngModel)]="newPassword"
+              required
+              autocomplete="new-password"
+              placeholder="********"
+            />
+          </div>
+        </label>
+
+        <label class="field">
+          <span class="label">Confirmar contraseña</span>
+          <div class="control">
+            <span class="i">🔒</span>
+            <input
+              [type]="showPass ? 'text' : 'password'"
+              name="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              required
+              autocomplete="new-password"
+              placeholder="********"
+            />
+          </div>
+        </label>
+
+        <button class="btn primary" type="submit" [disabled]="loading || !email || !newPassword || !confirmPassword">
+          <span class="spinner" *ngIf="loading"></span>
+          <span>{{ loading ? 'Actualizando…' : 'Cambiar contraseña' }}</span>
+        </button>
+
+        <p class="msg" *ngIf="msg">{{ msg }}</p>
+        <p class="error" *ngIf="error">{{ error }}</p>
+      </form>
+
+      <p class="alt"><a routerLink="/login">Volver al inicio de sesión</a></p>
+    </section>
+  </section>
+</div>

@@ -1,0 +1,92 @@
+<section class="crud-page">
+  <div class="crud-page__container">
+    <app-admin-nav></app-admin-nav>
+
+    <header class="crud-header">
+      <div class="crud-header__title">
+        <h1>Reservas</h1>
+        <p class="crud-header__subtitle">Visualiza la agenda semanal y gestiona estados de cada reserva.</p>
+      </div>
+      <div class="crud-header__actions">
+        <button class="crud-button" type="button" (click)="load()">Actualizar</button>
+      </div>
+    </header>
+
+    <div class="crud-card crud-card--filters">
+      <div class="crud-toolbar">
+        <button class="crud-button" type="button" (click)="moveDays(-7)">◀ Semana anterior</button>
+        <button class="crud-button" type="button" (click)="moveDays(7)">Semana siguiente ▶</button>
+        <button class="crud-button is-primary" type="button" (click)="desde = toIsoDate(hoy); load()">Hoy</button>
+      </div>
+    </div>
+
+    <div class="layout" *ngIf="!cargando">
+      <div class="crud-card crud-card--table reservations-table">
+        <div class="crud-scroll">
+          <table class="reservas-table">
+        <colgroup>
+          <col style="width:100px" />
+          <col span="7" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="head-empty"></th>
+            <th *ngFor="let d of days()" class="head">{{dayLabel(d)}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let h of hours()">
+            <th class="hour">{{h}}:00</th>
+            <td *ngFor="let d of days()" class="slot">
+              <div class="pill" *ngFor="let r of cellSlots(d, h)" (click)="open(r)" [class.st1]="r.estado==='PENDIENTE'" [class.st2]="r.estado==='CONFIRMADA'" [class.st3]="r.estado==='ANULADA'" [class.st4]="r.estado==='CANCELADA'" [class.st5]="r.estado==='REVISION'">
+                <span>
+                  {{ r.usuario?.nombre || r.usuario?.email || r.usuarioNombre || r.usuarioEmail || ('Usuario ' + (r.usuarioId || '—')) }}
+                  —
+                  {{ r.producto?.nombre || r.membresia?.nombre || r.productoNombre || r.membresiaNombre || ('Recurso ' + (r.productoId || r.membresiaId || '—')) }}
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+          </table>
+        </div>
+      </div>
+      <aside class="crud-card side">
+        <h3>Reservas</h3>
+        <div class="list">
+        <div class="item" *ngFor="let r of allByDate()" (click)="open(r)">
+          <div class="meta">{{r.fecha | date:'short'}}</div>
+          <div class="title">
+            {{ r.usuario?.nombre || r.usuario?.email || r.usuarioNombre || r.usuarioEmail || ('Usuario ' + (r.usuarioId || '—')) }}
+          </div>
+          <div class="estado">
+            {{ r.producto?.nombre || r.membresia?.nombre || r.productoNombre || r.membresiaNombre || ('Recurso ' + (r.productoId || r.membresiaId || '—')) }} · {{r.estado}}
+          </div>
+        </div>
+        <div class="crud-muted" *ngIf="allByDate().length===0">No hay reservas esta semana.</div>
+        </div>
+      </aside>
+    </div>
+    <div *ngIf="cargando" class="crud-card crud-empty">Cargando…</div>
+
+
+  <!-- Modal Detalle -->
+  <div class="crud-modal-backdrop" *ngIf="modal" (click)="modal=false"></div>
+  <div class="crud-modal" *ngIf="modal">
+    <div class="crud-modal__header">
+      <h3>Reserva #{{sel?.id}}</h3>
+      <button class="crud-modal__close" type="button" (click)="modal=false">×</button>
+    </div>
+    <div class="crud-modal__body">
+      <div><b>Usuario:</b> {{sel?.usuario?.nombre || sel?.usuario?.email || sel?.usuarioNombre || sel?.usuarioEmail || ('Usuario ' + (sel?.usuarioId || '—'))}}</div>
+      <div><b>Recurso:</b> {{sel?.producto?.nombre || sel?.membresia?.nombre || sel?.productoNombre || sel?.membresiaNombre || ('Recurso ' + (sel?.productoId || sel?.membresiaId || '—'))}}</div>
+      <div><b>Fecha:</b> {{sel?.fecha | date:'short'}}</div>
+      <div><b>Duración:</b> {{sel?.duracionMinutos}} min</div>
+      <div><b>Estado:</b> {{sel?.estado}}</div>
+    </div>
+    <div class="crud-modal__footer">
+      <button class="crud-button" type="button" (click)="modal=false">Cerrar</button>
+    </div>
+  </div>
+</div>
+</section>

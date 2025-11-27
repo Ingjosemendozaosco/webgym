@@ -1,0 +1,11 @@
+<section class="card">
+    <h2>Verificación en 2 pasos</h2>
+    <p>Ingresa el código enviado a tu correo.</p>
+        <label>Correo</label>
+        <input type="email" [(ngModel)]="email" placeholder="tu@correo.com" />
+        <label>Código</label>
+        <input type="text" [(ngModel)]="code" maxlength="6" inputmode="numeric" placeholder="******" />
+        <button (click)="submit()" [disabled]="loading">Confirmar</button>
+    
+    <p class="msg">{{ msg }}</p>
+</section>

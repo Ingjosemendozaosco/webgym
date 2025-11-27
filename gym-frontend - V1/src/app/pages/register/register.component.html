@@ -1,0 +1,81 @@
+<div class="auth auth--register">
+  <div class="overlay"></div>
+
+  <section class="card">
+    <header class="head">
+      <h1>Únete a <span>AngelsGym</span></h1>
+      <p class="sub">Crea tu cuenta para empezar a entrenar con nosotros.</p>
+    </header>
+
+    <form #f="ngForm" (ngSubmit)="submit(f)" class="form" novalidate>
+      <!-- Nombre -->
+      <label class="field">
+        <span class="label">Nombre</span>
+        <div class="input">
+          <span class="ico user"></span>
+          <input type="text" [(ngModel)]="nombre" name="nombre" required />
+        </div>
+        <small class="err" *ngIf="f.submitted && !nombre">Obligatorio.</small>
+      </label>
+
+      <!-- Apellido -->
+      <label class="field">
+        <span class="label">Apellido</span>
+        <div class="input">
+          <span class="ico user"></span>
+          <input type="text" [(ngModel)]="apellido" name="apellido" required />
+        </div>
+        <small class="err" *ngIf="f.submitted && !apellido">Obligatorio.</small>
+      </label>
+
+      <!-- Email -->
+      <label class="field">
+        <span class="label">Email</span>
+        <div class="input">
+          <span class="ico mail"></span>
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            required
+            email
+            #emailModel="ngModel"
+          />
+        </div>
+        <small class="err" *ngIf="f.submitted && emailModel.invalid">
+          Ingresa un email válido.
+        </small>
+      </label>
+
+      <!-- Password -->
+      <label class="field">
+        <span class="label">Contraseña</span>
+        <div class="input">
+          <span class="ico lock"></span>
+          <input
+            [type]="showPass ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            required
+            minlength="6"
+            #passModel="ngModel"
+          />
+          <button type="button" class="toggle" (click)="showPass=!showPass" aria-label="Mostrar u ocultar contraseña"></button>
+        </div>
+        <small class="err" *ngIf="f.submitted && passModel.errors?.['minlength']">
+          Mínimo 6 caracteres.
+        </small>
+      </label>
+
+      <button class="btn" type="submit" [disabled]="loading || f.invalid">
+        <span class="load" *ngIf="loading"></span>
+        <span>Registrarme</span>
+      </button>
+
+      <p class="msg ok" *ngIf="msg">{{ msg }}</p>
+      <p class="msg err" *ngIf="error">{{ error }}</p>
+
+      <p class="hint">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </form>
+  </section>
+</div>

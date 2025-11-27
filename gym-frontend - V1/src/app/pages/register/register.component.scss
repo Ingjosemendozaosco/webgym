@@ -1,0 +1,93 @@
+:host {
+    --red: #d32f2f;
+    --red-700: #b71c1c;
+    --ink: #0f1220;
+    --muted: #9aa3b2;
+    --glass: rgba(13, 18, 31, .55);
+    --glass-strong: rgba(13, 18, 31, .72);
+    --line: rgba(255,255,255,.10);
+    font-family: "League Spartan", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  
+  /* Fondo + centrado */
+  .auth{
+    position: fixed; inset: 0;
+    display: grid; place-items: center;
+    background:
+      radial-gradient(900px 420px at -10% -10%, rgba(211,47,47,.08), transparent 60%),
+      radial-gradient(900px 420px at 110% 0%, rgba(183,28,28,.06), transparent 55%),
+      url('https://img.freepik.com/foto-gratis/vista-sala-gimnasio-entrenamiento-deportes_23-2151699540.jpg?semt=ais_hybrid&w=1920&q=80') center/cover no-repeat,
+      #0b1220;
+    overflow:auto;
+  }
+  .overlay{ position:absolute; inset:0; background:linear-gradient(rgba(3,7,18,.45), rgba(3,7,18,.55)); backdrop-filter: blur(3px); }
+  
+  /* Card glass */
+  .card{
+    position: relative; z-index:2;
+    width:min(720px, 92vw);
+    border-radius:16px;
+    padding:22px 20px;
+    border:1px solid var(--line);
+    background: linear-gradient(180deg, var(--glass), var(--glass-strong));
+    box-shadow: 0 24px 60px rgba(0,0,0,.45), inset 0 0 28px rgba(211,47,47,.10);
+    backdrop-filter: blur(14px);
+  }
+  
+  .head{ text-align:center; margin-bottom:10px; }
+  .head h1{
+    margin:0; color:#fff; font-weight:900;
+    font-size: clamp(1.6rem, 1rem + 2.2vw, 2.6rem);
+    letter-spacing:.2px; text-shadow:0 2px 10px rgba(0,0,0,.35);
+  }
+  .sub{ color:#cbd5e1; font-weight:700; margin:.25rem 0 1rem; }
+  
+  /* Formulario */
+  .form{ display:grid; gap:14px; max-width:440px; margin:0 auto; }
+  .field{ display:grid; gap:6px; }
+  .label{ color:#e5e7eb; font-weight:800; letter-spacing:.02em; font-size:.9rem; }
+  
+  .input{
+    position:relative; display:flex; align-items:center; gap:10px;
+    height:48px; border-radius:12px; padding:0 12px 0 40px;
+    background: rgba(255,255,255,.06); border:1px solid var(--line);
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .input:focus-within{ background: rgba(255,255,255,.08); border-color: var(--red); box-shadow:0 0 0 3px rgba(211,47,47,.14); }
+  .input input{ width:100%; height:100%; border:0; outline:0; background:transparent; color:#fff; font-weight:700; }
+  
+  /* Íconos */
+  .ico{ position:absolute; left:12px; width:18px; height:18px; opacity:.9; }
+  .ico.user{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 12c2.761 0 5-2.686 5-6s-2.239-6-5-6-5 2.686-5 6 2.239 6 5 6zm0 2c-3.866 0-7 2.239-7 5v3h14v-3c0-2.761-3.134-5-7-5z'/%3E%3C/svg%3E") center/contain no-repeat; }
+  .ico.mail{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 13.5L0 6V4l12 7.5L24 4v2l-12 7.5zM0 8l12 7.5L24 8v12H0V8z'/%3E%3C/svg%3E") center/contain no-repeat; }
+  .ico.lock{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M17 8V6a5 5 0 10-10 0v2H5v14h14V8h-2zm-8 0V6a3 3 0 016 0v2H9z'/%3E%3C/svg%3E") center/contain no-repeat; }
+  
+  /* Ojo password */
+  .toggle{ position:absolute; right:10px; width:36px; height:36px; border:0; background:transparent; cursor:pointer; border-radius:8px; }
+  .toggle::before{ content:''; display:block; width:20px; height:20px; margin:auto;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23e5e7eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center/contain no-repeat; opacity:.9; }
+  .toggle:hover{ background: rgba(255,255,255,.06); }
+  
+  /* Botón */
+  .btn{
+    height:48px; border-radius:12px; border:1px solid var(--red);
+    background: linear-gradient(135deg, var(--red), var(--red-700));
+    color:#fff; font-weight:900; letter-spacing:.06em; text-transform:uppercase;
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    box-shadow:0 10px 24px rgba(211,47,47,.28);
+    transition: transform .08s ease, box-shadow .18s ease, filter .18s ease;
+  }
+  .btn:hover{ transform: translateY(-1px); box-shadow:0 14px 32px rgba(211,47,47,.32); filter:saturate(1.05); }
+  .btn:disabled{ opacity:.6; transform:none; box-shadow:none; }
+  .load{ width:18px; height:18px; border-radius:50%; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; animation: spin 1s linear infinite; }
+  
+  .msg{ text-align:center; font-weight:800; margin-top:8px; }
+  .msg.ok{ color:#22c55e; }
+  .msg.err{ color:#ff6b6b; }
+  .hint{ text-align:center; color:#cbd5e1; font-weight:700; margin-top:12px; }
+  .hint a{ color:#ffd1d1; text-decoration:none; border-bottom:1px dashed rgba(255,255,255,.3); }
+  .hint a:hover{ color:#fff; border-bottom-color:#fff; }
+  
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  @media (max-width:560px){ .card{ width:min(94vw,520px); padding:18px 16px; } }
+  

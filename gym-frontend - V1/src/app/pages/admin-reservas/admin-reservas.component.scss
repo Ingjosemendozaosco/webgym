@@ -1,0 +1,142 @@
+:host {
+  display: block;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(260px, 320px);
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+.reservations-table {
+  overflow: visible;
+}
+
+.reservas-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.reservas-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(8px);
+  color: #1f2937;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 0.75rem 0.6rem;
+}
+
+.reservas-table thead th.head-empty {
+  left: 0;
+  z-index: 3;
+}
+
+.reservas-table th.hour {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: rgba(248, 250, 252, 0.95);
+  color: #334155;
+  font-weight: 700;
+  border-right: 1px solid rgba(226, 232, 240, 0.8);
+  width: 100px;
+  padding: 0.6rem 0.5rem;
+}
+
+.reservas-table td.slot,
+.reservas-table th.hour {
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.reservas-table td.slot {
+  padding: 0.5rem;
+  vertical-align: top;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.pill:hover {
+  filter: brightness(0.98);
+}
+
+.pill.st1 { background: rgba(254, 252, 232, 0.9); border-color: rgba(250, 204, 21, 0.5); }
+.pill.st2 { background: rgba(236, 253, 245, 0.9); border-color: rgba(52, 211, 153, 0.45); }
+.pill.st3 { background: rgba(254, 226, 226, 0.9); border-color: rgba(239, 68, 68, 0.4); }
+.pill.st4 { background: rgba(226, 232, 240, 0.9); border-color: rgba(148, 163, 184, 0.4); }
+.pill.st5 { background: rgba(224, 242, 254, 0.9); border-color: rgba(56, 189, 248, 0.4); }
+
+.side {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.side h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.side .list {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.side .item {
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 0.85rem;
+  padding: 0.6rem 0.75rem;
+  display: grid;
+  gap: 0.25rem;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.side .item:hover {
+  background: rgba(248, 250, 252, 0.9);
+  border-color: rgba(148, 163, 184, 0.8);
+}
+
+.side .item .meta {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.side .item .title {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.side .item .estado {
+  font-size: 0.85rem;
+  color: #334155;
+  font-weight: 600;
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

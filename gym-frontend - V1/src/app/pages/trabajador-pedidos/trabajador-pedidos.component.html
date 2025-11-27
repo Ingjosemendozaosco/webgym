@@ -1,0 +1,125 @@
+<section class="crud-page">
+  <div class="crud-page__container">
+    <app-trabajador-nav></app-trabajador-nav>
+
+    <header class="crud-header">
+      <div class="crud-header__title">
+        <h1>Pedidos</h1>
+        <p class="crud-header__subtitle">Consulta y actualiza el estado de pedidos realizados en tienda.</p>
+      </div>
+      <div class="crud-header__actions">
+        <button class="crud-button" type="button" (click)="cargar()">Refrescar</button>
+      </div>
+    </header>
+
+    <div class="crud-card crud-card--filters">
+      <label class="crud-filter">
+        <span>Estado del pedido</span>
+        <select class="crud-control" [(ngModel)]="filtroEstado" (change)="cargar()">
+          <option value="">Todos</option>
+          <option>PENDIENTE</option>
+          <option>CONFIRMADO</option>
+          <option>RECHAZADO</option>
+          <option>CANCELADO</option>
+        </select>
+      </label>
+      <div class="crud-spacer"></div>
+      <button class="crud-button" type="button" (click)="cargar()">Aplicar filtro</button>
+    </div>
+
+    <div class="crud-card crud-card--table" *ngIf="!cargando">
+      <div class="crud-scroll">
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Detalle</th>
+              <th>Método</th>
+              <th>Pago</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of pedidos">
+              <td data-label="ID">{{p.id}}</td>
+              <td data-label="Usuario" class="crud-ellipsis">{{p.usuarioNombre || p.usuarioEmail || p.usuarioId || '—'}}</td>
+              <td data-label="Total">{{P(p.total)}}</td>
+              <td data-label="Estado">
+                <span
+                  class="crud-badge"
+                  [ngClass]="{
+                    'is-success': p.estado==='CONFIRMADO',
+                    'is-danger': p.estado==='RECHAZADO',
+                    'is-warning': p.estado==='PENDIENTE' || p.estado==='REVISION',
+                    'is-muted': p.estado==='CANCELADO'
+                  }"
+                >
+                  {{p.estado}}
+                </span>
+              </td>
+              <td data-label="Detalle">
+                <button class="crud-button" type="button" (click)="verMas(p)">Ver más</button>
+              </td>
+              <td data-label="Método">{{p.metodoPago}}</td>
+              <td data-label="Pago">
+                <div *ngIf="p.pago as pg">
+                  {{pg.estado}} / {{P(pg.monto)}}
+                  <div *ngIf="pg.referenciaPago" class="crud-muted">Ref: {{pg.referenciaPago}}</div>
+                </div>
+                <div *ngIf="!p.pago" class="crud-muted">—</div>
+              </td>
+              <td data-label="Fecha">
+                <div>{{F(p.fechaPedido)}}</div>
+                <div *ngIf="p.fechaConfirmacion" class="crud-muted">Conf: {{F(p.fechaConfirmacion)}}</div>
+              </td>
+              <td data-label="Acciones" class="crud-toolbar">
+                <ng-container [ngSwitch]="p.estado">
+                  <button *ngSwitchCase="'PENDIENTE'" class="crud-button is-primary" type="button" (click)="confirmar(p)">Confirmar</button>
+                  <button *ngSwitchCase="'CONFIRMADO'" class="crud-button is-warning" type="button" (click)="cancelar(p)">Cancelar</button>
+                  <button *ngSwitchCase="'CANCELADO'" class="crud-button is-danger" type="button" (click)="eliminar(p)">Eliminar</button>
+                  <span *ngSwitchDefault class="crud-muted">—</span>
+                </ng-container>
+                <button class="crud-button" type="button" (click)="revisar(p)">Revisar</button>
+                <button class="crud-button is-danger" type="button" (click)="rechazar(p)">Rechazar</button>
+                <button class="crud-button" type="button" *ngIf="p.estado==='CONFIRMADO'" (click)="exportarPdf(p)">Exportar PDF</button>
+              </td>
+            </tr>
+            <tr *ngIf="(pedidos?.length||0)===0">
+              <td colspan="9" class="crud-empty">No hay pedidos para los filtros.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="crud-card crud-empty">Cargando…</div>
+    <div *ngIf="error" class="crud-card crud-empty">{{error}}</div>
+
+    <div class="crud-modal-backdrop" *ngIf="detalleAbierto" (click)="cerrarDetalle()"></div>
+    <div class="crud-modal" *ngIf="detalleAbierto">
+      <div class="crud-modal__header">
+        <h3>Detalle del pedido #{{pedidoSeleccionado?.id}}</h3>
+        <button class="crud-modal__close" (click)="cerrarDetalle()">×</button>
+      </div>
+      <div class="crud-modal__body">
+        <div *ngIf="pedidoSeleccionado?.detalles?.length; else noItems">
+          <div class="detalle-item" *ngFor="let d of pedidoSeleccionado.detalles">
+            <div class="name">{{d.productoNombre || 'Item'}}</div>
+            <div class="qty">x{{d.cantidad}}</div>
+            <div class="sub">{{P(d.subtotal || 0)}}</div>
+          </div>
+        </div>
+        <ng-template #noItems>
+          <div class="crud-muted">Sin items</div>
+        </ng-template>
+      </div>
+      <div class="crud-modal__footer">
+        <button class="crud-button" type="button" (click)="cerrarDetalle()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</section>

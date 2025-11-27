@@ -1,0 +1,217 @@
+<section class="page perfil-red">
+  <!-- Encabezado -->
+  <header class="profile-head">
+    <div class="avatar" aria-hidden="true"></div>
+    <div>
+      <h1>Perfil</h1>
+      <p class="muted">Administra tus datos personales y suscripciones.</p>
+    </div>
+    <div class="quick">
+      <button class="btn" type="button" [routerLink]="['/perfil/qr']">Mi QR</button>
+      <button class="btn ghost" type="button" (click)="guardar()">Guardar cambios</button>
+      <button class="btn" type="button" (click)="verHistorialPagos()">Historial de pagos</button>
+      <button class="btn" type="button" (click)="verHistorialSuscripciones()">Historial de suscripciones</button>
+      <button class="btn" type="button" (click)="verComprasConfirmadas()">Compras confirmadas</button>
+    </div>
+  </header>
+
+  <!-- Recordatorios -->
+  <div class="grid-full reminders" *ngIf="proximaReserva || avisoVencimiento">
+    <article class="card reminder-card" *ngIf="proximaReserva">
+      <div class="reminder-title">Tienes una reserva hoy</div>
+      <p class="reminder-text">
+        Hoy a <strong>{{ proximaReserva?.fecha | date:'shortTime' }}</strong>
+        para
+        <strong>{{ proximaReserva?.producto?.nombre || proximaReserva?.membresia?.nombre || 'tu reserva' }}</strong>.
+      </p>
+      <button class="btn ghost" type="button" [routerLink]="['/reservas']">Ver mis reservas</button>
+    </article>
+
+    <article class="card reminder-card reminder-card--warn" *ngIf="avisoVencimiento">
+      <div class="reminder-title">Tu suscripción está por vencer</div>
+      <p class="reminder-text">
+        {{ diasRestantesVencimiento === 1 ? 'Vence mañana' : ('Vence en ' + diasRestantesVencimiento + ' días') }}
+        ·
+        <strong>{{ avisoVencimiento?.nombre || avisoVencimiento?.membresia?.nombre || avisoVencimiento?.planSuscripcion?.nombre || 'Suscripción' }}</strong>
+      </p>
+      <button class="btn primary" type="button" [routerLink]="['/planes']">Renovar ahora</button>
+    </article>
+  </div>
+
+  <!-- Bloque principal: Datos + Password -->
+  <div class="grid-main">
+    <!-- Datos personales -->
+    <article class="card">
+      <h3>Datos personales</h3>
+      <div class="form">
+        <label class="field">
+          <span>Nombre</span>
+          <input class="line" [(ngModel)]="nombre" placeholder="Nombre">
+        </label>
+        <label class="field">
+          <span>Apellido</span>
+          <input class="line" [(ngModel)]="apellido" placeholder="Apellido">
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input class="line" [ngModel]="email" disabled>
+        </label>
+        <label class="field">
+          <span>Teléfono</span>
+          <input class="line" [(ngModel)]="telefono" placeholder="Ej. 999111222">
+        </label>
+        <label class="field field--full">
+          <span>Dirección</span>
+          <input class="line" [(ngModel)]="direccion" placeholder="Tu dirección">
+        </label>
+        <label class="field field--full">
+          <span>Foto (URL)</span>
+          <input class="line" [(ngModel)]="fotoUrl" placeholder="https://...">
+        </label>
+        <label class="field field--full">
+          <span>Recordatorios por correo</span>
+          <div class="toggle-row">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="recordatoriosActivos">
+              <span class="slider"></span>
+            </label>
+            <span class="muted-text">Recibir avisos por correo cuando se acerquen tus reservas y el vencimiento de tus planes.</span>
+          </div>
+        </label>
+      </div>
+      <div class="actions">
+        <button class="btn" type="button" (click)="nombre='';apellido='';telefono='';direccion='';fotoUrl=''">Limpiar</button>
+        <button class="btn primary" type="button" (click)="guardar()">Guardar</button>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Suscripciones activas + Asisto al gym -->
+  <div class="grid-secondary">
+    <article class="card">
+      <h3>Activas ✨</h3>
+      <div *ngIf="!activasMembresias?.length && !activasPlanes?.length" class="empty">
+        No tienes suscripciones activas.
+      </div>
+
+      <div class="active-grid" *ngIf="activasMembresias?.length || activasPlanes?.length">
+        <div class="pill pill--membresia" *ngFor="let s of activasMembresias">
+          <div class="pill-inner">
+            <div class="pill-avatar" style="background-image:url('https://wallpapers.com/images/hd/epic-neon-n6l0y5hcs89wjvwt.jpg'); background-size:cover; background-position:center;"></div>
+            <div class="pill-body">
+              <div class="top">
+                <div class="title">{{ s.nombre || s.membresia?.nombre || 'Membresía' }}</div>
+                <span class="badge">Membresía</span>
+              </div>
+              <div class="pill-meta">
+                <span>📅 Vence {{ s.fechaFin | date:'shortDate' }}</span>
+                <span *ngIf="s.monto">💳 S/ {{ s.monto | number:'1.2-2' }}</span>
+              </div>
+              <div class="actions">
+                <button class="btn ghost" type="button" (click)="abrirDetalleSuscripcion(s)">Ver beneficios 🥊</button>
+                <button class="btn danger" type="button" (click)="cancelarSuscripcion(s)">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pill pill--plan" *ngFor="let s of activasPlanes">
+          <div class="pill-inner">
+            <div class="pill-avatar" style="background-image:url('https://wallpapers.com/images/hd/epic-neon-lhxh5wodbdikedmp.jpg'); background-size:cover; background-position:center;"></div>
+            <div class="pill-body">
+              <div class="top">
+                <div class="title">{{ s.nombre || s.planSuscripcion?.nombre || 'Plan' }}</div>
+                <span class="badge">Plan</span>
+              </div>
+              <div class="pill-meta">
+                <span>Vence {{ s.fechaFin | date:'shortDate' }}</span>
+                <span *ngIf="s.monto">S/ {{ s.monto | number:'1.2-2' }}</span>
+              </div>
+              <div class="actions">
+                <button class="btn ghost" type="button" (click)="abrirDetalleSuscripcion(s)">Ver beneficios 🥊</button>
+                <button class="btn danger" type="button" (click)="cancelarSuscripcion(s)">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <h3>Asisto al gym 🏋️‍♂️</h3>
+      <div class="asist-summary">
+        <div class="asist-summary__item">
+          <span class="asist-label">Hoy</span>
+          <span class="asist-value">{{ hoy | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="asist-summary__item">
+          <span class="asist-label">Días asistidos esta semana</span>
+          <span class="asist-value">{{ diasAsistidosSemana() }}</span>
+        </div>
+        <div class="asist-summary__item">
+          <span class="asist-label">Días asistidos este mes</span>
+          <span class="asist-value">{{ diasAsistidosMes() }}</span>
+        </div>
+      </div>
+      <div *ngIf="!asistencias?.length" class="empty">
+        Aún no registras asistencias.
+      </div>
+      <ul class="list" *ngIf="asistencias?.length">
+        <li class="rowx" *ngFor="let a of asistenciasVisibles(10)">
+          <div class="info">
+            <span class="chip">{{ (a.tipo || '').toString().toUpperCase() === 'ENTRADA' ? 'Entrada' : 'Salida' }}</span>
+            <span>{{ a.fechaHora | date:'short' }}</span>
+          </div>
+        </li>
+      </ul>
+    </article>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="showDetalle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Detalle {{ detalleTipo==='pedido' ? 'de pedido' : 'de suscripción' }}</h3>
+        <button class="close" (click)="cerrarDetalle()">×</button>
+      </div>
+      <div class="modal-content">
+        <ng-container *ngIf="detalleTipo==='pedido'">
+          <p><strong>Pedido #</strong>{{ detalle?.id }}</p>
+          <p><strong>Fecha:</strong> {{ detalle?.fechaPedido || detalle?.fecha | date:'short' }}</p>
+          <p><strong>Total:</strong> S/ {{ detalle?.total | number:'1.2-2' }}</p>
+          <p><strong>Estado:</strong> {{ detalle?.estado }}</p>
+        </ng-container>
+        <ng-container *ngIf="detalleTipo==='suscripcion'">
+          <div class="sub-detail-card">
+            <div class="sub-detail-head">
+              <div class="sub-detail-name">{{ detalle?.membresia?.nombre || detalle?.planSuscripcion?.nombre || detalle?.plan?.nombre || detalle?.nombre }}</div>
+              <span class="badge sub-detail-status">{{ detalle?.estado }}</span>
+            </div>
+            <div class="sub-detail-benefit" *ngIf="detalle?.beneficio || detalle?.beneficios || detalle?.descripcion">
+              {{ detalle?.beneficio || detalle?.beneficios || detalle?.descripcion }}
+            </div>
+            <div class="sub-detail-body">
+              <div class="sub-detail-item">
+                <div class="sub-label">Inicio 🕒</div>
+                <div class="sub-value">{{ detalle?.fechaInicio | date:'short' }}</div>
+              </div>
+              <div class="sub-detail-item">
+                <div class="sub-label">Fin 🏁</div>
+                <div class="sub-value">{{ detalle?.fechaFin | date:'short' }}</div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="modal-actions">
+        <button *ngIf="detalleTipo==='pedido' && (detalle?.estado || '').toUpperCase()==='PENDIENTE'"
+                class="btn danger" (click)="cancelarPedido(detalle)">Cancelar pedido</button>
+        <button *ngIf="detalleTipo==='suscripcion' && (detalle?.estado==='ACTIVA')"
+                class="btn danger" (click)="cancelarSuscripcion(detalle)">Cancelar suscripción</button>
+        <button *ngIf="detalleTipo==='suscripcion' && (detalle?.estado==='CANCELADA' || detalle?.estado==='RECHAZADA' || detalle?.estado==='EXPIRADA')"
+                class="btn danger" (click)="eliminarSuscripcion(detalle)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</section>

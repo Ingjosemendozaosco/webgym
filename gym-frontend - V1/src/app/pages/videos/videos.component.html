@@ -1,0 +1,83 @@
+<section class="page videos">
+  <div class="hero">
+    <div class="hero__inner">
+      <h1>Biblioteca de videos</h1>
+      <p>Accede a rutinas guiadas, sesiones HIIT y programas de movilidad según tu plan activo.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="info-banner">Contenido habilitado según tu membresía activa.</div>
+
+    <div class="sections" *ngIf="secciones?.length; else noAcceso">
+      <article class="video-card" *ngFor="let s of secciones" [class.disabled]="!s.enabled">
+        <header class="video-card__media" [attr.data-key]="s.key">
+          <span class="video-card__count">{{ s.videos.length || 0 }} videos</span>
+        </header>
+
+        <div class="video-card__body">
+          <div class="video-card__title">
+            <div class="icon">
+              <ng-container [ngSwitch]="s.key">
+                <span *ngSwitchCase="'hiit'">⚡</span>
+                <span *ngSwitchCase="'fuerza'">🏋️</span>
+                <span *ngSwitchCase="'movilidad'">🧘</span>
+                <span *ngSwitchDefault>💪</span>
+              </ng-container>
+            </div>
+            <div>
+              <h3>{{ s.titulo }}</h3>
+              <p class="muted">Beneficio: {{ s.beneficio }}</p>
+            </div>
+            <div class="video-card__actions" *ngIf="s.enabled; else blocked">
+              <button class="btn ghost" (click)="toggleOpen(s)">{{ s.open ? 'Ocultar' : 'Ver' }}</button>
+              <a class="btn link" routerLink="/membresias">Membresías</a>
+            </div>
+            <ng-template #blocked>
+              <div class="video-card__actions">
+                <a class="btn link" routerLink="/membresias">Membresías</a>
+              </div>
+            </ng-template>
+          </div>
+
+          <p class="video-card__description">{{ s.descripcion }}</p>
+          <span class="plan-pill">Plan: {{ s.plan }}</span>
+
+          <div class="video-card__cta" *ngIf="!s.enabled">
+            <a class="btn primary" routerLink="/membresias">Adquirir acceso</a>
+          </div>
+
+          <ng-container *ngIf="s.enabled && s.open">
+            <div class="video-row">
+              <div class="video-row__inner" #rowRef [id]="'row-' + s.key" (mouseenter)="pauseAuto(rowRef)" (mouseleave)="resumeAuto(rowRef)">
+                <div class="video-tile" *ngFor="let v of s.videos; let i = index" (click)="openModal(v.embed)" title="Reproducir">
+                  <div class="video-tile__thumb">
+                    <img [src]="v.thumbMax || v.thumb || ''" alt="Thumbnail" loading="lazy"/>
+                    <span class="play">▶</span>
+                  </div>
+                  <div class="video-tile__caption">{{ s.titulo }} • Video {{ i + 1 }}</div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <ng-template #noAcceso>
+    <div class="no-access">
+      No tienes secciones habilitadas. Adquiere una membresía en <a routerLink="/membresias">Membresías</a>.
+    </div>
+  </ng-template>
+
+  <div class="modal" *ngIf="modalOpen" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <button class="close" (click)="closeModal()">✕</button>
+      <div class="iframe-wrap modal-mode">
+        <iframe [src]="modalSrc" title="Video" frameborder="0" allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+      </div>
+    </div>
+  </div>
+</section>

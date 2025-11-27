@@ -1,0 +1,50 @@
+.page.pagos { padding: 0; min-height:100dvh; display:grid; }
+.hero {
+  background: url('https://image.slidesdocs.com/responsive-images/background/internet-white-application-happy-abstract-marketing-powerpoint-background_3e4b61ad5d__960_540.jpg') center/cover fixed no-repeat;
+  display:flex; justify-content:flex-end; align-items:flex-start; padding: 56px 2% 32px; min-height: 100vh;
+}
+.wrap { width:100%; display:grid; gap:1rem; justify-items:end; }
+.card { width:min(50vw, 900px); max-height: 60vh; overflow:auto; border:1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.6); backdrop-filter: blur(8px); border-radius:1rem; padding:1.25rem; box-shadow: 0 20px 50px rgba(2,6,23,.15); }
+.titulo { font-size:2rem; font-weight:800; text-align:right; text-shadow:0 2px 8px rgba(0,0,0,.2); margin:0 0 .5rem; }
+
+/* Vertical form layout */
+.metodos { display:grid; grid-template-columns: 1fr 1fr; gap:.6rem .8rem; align-items:end; justify-items:stretch; }
+.metodos label { display:grid; gap:.25rem; font-weight:700; color:#0f172a; font-size:.95rem; }
+.metodos input, .metodos select { padding:.5rem .7rem; border-radius:.5rem; border:1px solid #e5e7eb; background:#fff; outline:none; font-size:.95rem; max-width: 360px; }
+.metodos .dir input { max-width: 440px; }
+.metodos input:focus, .metodos select:focus { border-color:#0ea5e9; box-shadow: 0 0 0 3px rgba(14,165,233,.15); }
+.metodos .outline { justify-self:end; padding:.5rem .9rem; border-radius:.55rem; border:1px solid #0ea5e9; background:transparent; color:#0ea5e9; font-weight:800; cursor:pointer; }
+.metodos .outline[disabled] { opacity:.6; cursor:not-allowed; }
+.metodos .actions { grid-column: 1 / -1; display:flex; justify-content:flex-end; }
+.cta { grid-column: 1 / -1; display:flex; justify-content:stretch; margin-top:.2rem; }
+.cta .pill { width:100%; padding:.8rem 1.1rem; border-radius:.7rem; border:1px solid #0ea5e9; background:#0ea5e9; color:#fff; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:.5rem; }
+.cta .pill.loading { opacity:.9; cursor:wait; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,.6); border-top-color:#fff; border-radius:50%; display:inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.resumen { margin-top: 1rem; border-top:1px dashed #e5e7eb; padding-top: 1rem; display:grid; gap:1rem; font-weight:600; }
+.resumen .total { font-size:1.05rem; margin-bottom:.2rem; }
+.resumen strong { font-weight:800; }
+
+/* Modal overlay */
+.modal { position: fixed; inset:0; display:grid; place-items:center; z-index: 60; }
+.modal-backdrop { position:absolute; inset:0; background: rgba(2,6,23,.55); backdrop-filter: blur(2px); }
+.modal-content { position:relative; width:min(520px,92%); border-radius:1rem; background:#fff; padding:1rem; box-shadow: 0 24px 60px rgba(2,6,23,.3); display:grid; gap:.7rem; z-index: 61; }
+.modal-content h3 { margin:0; font-size:1.2rem; font-weight:800; color:#0f172a; }
+.modal-content .sub { margin:-.25rem 0 .25rem; color:#475569; font-weight:600; }
+.modal-content .actions { display:flex; gap:.6rem; justify-content:flex-end; }
+.modal-content .outline { padding:.55rem 1rem; border-radius:.6rem; border:1px solid #0f172a; background:transparent; color:#0f172a; font-weight:800; }
+.modal-content .pill { padding:.6rem 1rem; border-radius:.6rem; border:1px solid #0ea5e9; background:#0ea5e9; color:#fff; font-weight:800; }
+
+/* Toast */
+.toast { position: fixed; bottom: 20px; right: 20px; padding:.65rem .9rem; background:#0f766e; color:#ecfeff; border-radius:.6rem; box-shadow: 0 10px 24px rgba(0,0,0,.18); font-weight:800; z-index:70; }
+
+/* Responsive: center on small screens */
+@media (max-width: 640px){
+  .hero { justify-content:center; }
+  .wrap { justify-items:center; }
+  .titulo { text-align:center; }
+  .card { width:96%; }
+  .metodos { grid-template-columns: 1fr; }
+  .metodos input, .metodos select { max-width: 100%; }
+}

@@ -1,0 +1,60 @@
+/* src/styles/vars.scss */
+
+/* Paleta y tokens */
+$primary: #d32f2f;
+$secondary: #06b6d4;
+$success: #16a34a;
+$danger: #dc2626;
+$warning: #f59e0b;
+$text: #111111;
+$muted: #6b7280;
+$bg: #f8fafc;
+
+/* Superficies y bordes */
+$surface: #ffffff;        // fondo de tarjetas / nav
+$surface-2: #f9fafb;      // alternativa de superficie clara
+$border: #e0e0e0;         // gris claro para bordes
+
+/* Sombras */
+$shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+$shadow-md: 0 6px 20px rgba(0,0,0,.08);
+
+/* Espaciados */
+$space: (0: 0, 1: .25rem, 2: .5rem, 3: .75rem, 4: 1rem, 5: 1.25rem, 6: 1.5rem);
+@function s($i) { @return map-get($space, $i); }
+
+/* Mixins básicos */
+@mixin card {
+  background: $surface;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  box-shadow: $shadow-md;
+}
+
+@mixin btn-base {
+  display: inline-block;
+  padding: .6rem 1rem;
+  border-radius: .75rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: transform .05s ease, box-shadow .2s ease, background .2s ease;
+}
+
+/* Botones */
+@mixin btn-primary {
+  @include btn-base;
+  background: $primary;
+  color: #fff;
+  &:hover { box-shadow: 0 6px 18px rgba(79,70,229,.3); }
+  &:active { transform: translateY(1px); }
+}
+
+@mixin btn-secondary {
+  @include btn-base;
+  background: $secondary;
+  color: #0b1320; /* texto oscuro legible sobre cian */
+  &:hover { box-shadow: 0 6px 18px rgba(6,182,212,.25); }
+  &:active { transform: translateY(1px); }
+}

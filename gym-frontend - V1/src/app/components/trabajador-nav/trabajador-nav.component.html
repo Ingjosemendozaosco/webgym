@@ -1,0 +1,11 @@
+<nav class="worker-nav">
+  <button class="pill" (click)="goHome()">Inicio</button>
+  <a routerLink="/trabajador/pedidos" routerLinkActive="active">Pedidos</a>
+  <a routerLink="/trabajador/reservas" routerLinkActive="active">Reservas</a>
+  <a routerLink="/trabajador/checkin" routerLinkActive="active">Escanear QR</a>
+  <a routerLink="/trabajador/membresias" routerLinkActive="active">Membresías</a>
+  <a routerLink="/trabajador/planes" routerLinkActive="active">Planes</a>
+  <a routerLink="/trabajador/soporte" routerLinkActive="active">Soporte</a>
+  <span class="spacer"></span>
+  <button class="pill danger" (click)="salir()">Salir</button>
+</nav>

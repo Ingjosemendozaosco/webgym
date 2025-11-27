@@ -1,0 +1,121 @@
+.page.historial-suscripciones {
+  padding: 1.5rem 1rem 2rem;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.head .muted {
+  font-size: .9rem;
+}
+
+.head .back {
+  margin-left: auto;
+  font-size: .85rem;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.card {
+  position: relative;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(248,250,252,.16), rgba(148,163,184,.22));
+  box-shadow: 0 0 0 1px rgba(15,23,42,.9), 0 0 34px rgba(148,163,184,.35);
+  flex: 1 1 320px;
+  max-width: 420px;
+  color:#f9fafb;
+}
+
+.card-inner {
+  border-radius: 15px;
+  padding: 10px 12px;
+  background: rgba(10,14,26,.96);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+}
+
+.pill-avatar{
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight:800;
+  color:#f9fafb;
+}
+
+.thumb--membresia {
+  background-image:url('https://wallpapers.com/images/hd/epic-neon-n6l0y5hcs89wjvwt.jpg');
+  background-size:cover;
+  background-position:center;
+}
+
+.thumb--plan {
+  background-image:url('https://wallpapers.com/images/hd/epic-neon-lhxh5wodbdikedmp.jpg');
+  background-size:cover;
+  background-position:center;
+}
+
+.body {
+  flex: 1;
+}
+
+.row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .4rem;
+}
+
+.row-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .85rem;
+}
+
+.dates {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+}
+
+.status .badge {
+  font-size: .8rem;
+}
+
+/* Brillos por estado */
+.card.estado-activa{
+  background: linear-gradient(135deg, rgba(34,197,94,.98), rgba(15,23,42,1));
+  box-shadow: 0 0 40px rgba(34,197,94,.7);
+  border:2px solid rgba(34,197,94,.9);
+}
+
+.card.estado-pendiente{
+  background: linear-gradient(135deg, rgba(250,204,21,.98), rgba(15,23,42,1));
+  box-shadow: 0 0 32px rgba(250,204,21,.6);
+  border:2px solid rgba(250,204,21,.9);
+}
+
+.card.estado-cancelada{
+  background: linear-gradient(135deg, rgba(248,113,113,.98), rgba(15,23,42,1));
+  box-shadow: 0 0 32px rgba(248,113,113,.65);
+  border:2px solid rgba(248,113,113,.95);
+}
+
+.card.estado-otro{
+  background: linear-gradient(135deg, rgba(148,163,184,.6), rgba(15,23,42,1));
+  border:2px solid rgba(148,163,184,.85);
+}

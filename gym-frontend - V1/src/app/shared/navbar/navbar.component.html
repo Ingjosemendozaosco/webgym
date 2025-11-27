@@ -1,0 +1,51 @@
+<nav class="nav" *ngIf="showNavbar">
+    <div class="container nav__wrap">
+        <div class="nav__left">
+            <a class="brand" routerLink="/">AngelsGym</a>
+            <ul class="links">
+            <li><a routerLink="/membresias" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Membresías</a></li>
+            <li><a routerLink="/productos"  routerLinkActive="active">Productos</a></li>
+            <li><a routerLink="/contacto"   routerLinkActive="active">Contáctanos</a></li>
+            </ul>
+        </div>
+    
+        <div class="nav__right">
+            <ng-container *ngIf="!auth.isLogged(); else logged">
+            <a class="btn ghost" routerLink="/login">Entrar</a>
+            <a class="btn primary" routerLink="/register">Crear cuenta</a>
+            </ng-container>
+    
+            <ng-template #logged>
+            <a *ngIf="auth.isAdmin()" class="btn ghost" routerLink="/admin">Admin</a>
+            <a *ngIf="auth.isTrabajador()" class="btn ghost" routerLink="/trabajador">Trabajador</a>
+            <a class="btn primary" routerLink="/videos">Videos</a>
+            <span class="who">{{ auth.getEmail() }}</span>
+            <button class="btn danger" (click)="logout()">Salir</button>
+            </ng-template>
+    
+            <button class="burger" (click)="toggle()" aria-label="Abrir menú">
+            <span></span><span></span><span></span>
+            </button>
+        </div>
+        </div>
+    
+        <div class="mobile" [class.open]="mobileOpen" (click)="close()">
+        <div class="mobile__panel" (click)="$event.stopPropagation()">
+            <a routerLink="/membresias" (click)="close()">Membresías</a>
+            <a routerLink="/productos"  (click)="close()">Productos</a>
+            <a routerLink="/contacto"   (click)="close()">Contáctanos</a>
+            <hr>
+            <ng-container *ngIf="!auth.isLogged(); else loggedM">
+            <a routerLink="/login" (click)="close()">Entrar</a>
+            <a class="primary" routerLink="/register" (click)="close()">Crear cuenta</a>
+            </ng-container>
+            <ng-template #loggedM>
+            <a *ngIf="auth.isAdmin()" routerLink="/admin" (click)="close()">Admin</a>
+            <a *ngIf="auth.isTrabajador()" routerLink="/trabajador" (click)="close()">Trabajador</a>
+            <a routerLink="/videos" (click)="close()">Videos</a>
+            <div class="who who--mobile">{{ auth.getEmail() }}</div>
+            <button class="danger" (click)="logout()">Salir</button>
+            </ng-template>
+        </div>
+        </div>
+</nav>

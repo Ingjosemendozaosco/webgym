@@ -1,0 +1,139 @@
+/* ====== Paleta local ====== */
+header.shell{
+  --nav-red:#d32f2f;
+  --nav-red-700:#b71c1c;
+  --nav-ink:#111827;
+  --nav-muted:#6b7280;
+  --nav-bg:#ffffff;
+  --nav-border:#e5e7eb;
+  --nav-radius:999px;
+  --btn-h:44px;
+}
+
+/* Tipografía */
+header.shell,
+header.shell .nav,
+header.shell .links a,
+header.shell .link-login,
+header.shell .cta,
+header.shell .who,
+header.shell .link-logout,
+header.shell .cart,
+header.shell .brand-name{
+  font-family:"League Spartan",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  letter-spacing:.01em;
+}
+
+/* Barra */
+header.shell .nav.nav--bar{
+  position:sticky; top:0; z-index:50; width:100%;
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--nav-border);
+}
+
+/* Layout */
+header.shell .nav-inner{
+  max-width:1400px; margin:0 auto;
+  height:76px; padding:0 32px;
+  display:grid; grid-template-columns:auto 1fr auto;
+  align-items:center; column-gap:48px;
+}
+
+/* Marca */
+header.shell .brand{ display:inline-flex; align-items:center; gap:12px; text-decoration:none; }
+header.shell .brand-logo{ height:44px; width:auto; display:block; object-fit:contain; }
+header.shell .brand-name{ color:var(--nav-ink); font-weight:800; font-size:1.15rem; line-height:1; }
+
+/* ====== Menú centrado con subrayado animado ====== */
+header.shell .links.links--center{
+  display:flex; align-items:center; justify-content:center;
+  gap:28px; list-style:none; margin:0; padding:0;
+}
+header.shell .links .pill{
+  position:relative; display:inline-flex; align-items:center;
+  color:var(--nav-ink); text-decoration:none; font-weight:600;
+  padding:0 0 6px; line-height:1; transition:color .2s ease;
+}
+header.shell .links .pill::after{
+  content:""; position:absolute; left:0; bottom:-4px;
+  width:100%; height:2px; border-radius:2px;
+  background: currentColor;
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .25s ease;
+  opacity:.9;
+}
+header.shell .links .pill:hover{ color:var(--nav-red); }
+header.shell .links .pill:hover::after,
+header.shell .links .pill.active::after{ transform:scaleX(1); }
+header.shell .links .pill.active{ color:var(--nav-red); }
+
+/* ====== Acciones derecha ====== */
+header.shell .nav-actions{ display:flex; align-items:center; gap:16px; }
+
+/* Botón ghost (Login) */
+header.shell .link-login{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:var(--btn-h); padding:0 18px; border-radius:var(--nav-radius);
+  border:1px solid var(--nav-border); background:#fff;
+  color:var(--nav-ink); font-weight:700; text-decoration:none;
+  transition: border-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+header.shell .link-login:hover{
+  border-color:var(--nav-red); color:var(--nav-red);
+  box-shadow:0 6px 14px rgba(0,0,0,.06);
+}
+
+/* Botón filled rojo (Registro) */
+header.shell .cta{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:var(--btn-h); padding:0 20px; border-radius:var(--nav-radius);
+  background:var(--nav-red); color:#fff; text-decoration:none; font-weight:800;
+  box-shadow:0 8px 18px rgba(211,47,47,.22);
+  transition: background .2s ease, transform .05s ease, box-shadow .2s ease;
+}
+header.shell .cta:hover{ background:var(--nav-red-700); box-shadow:0 10px 22px rgba(211,47,47,.26); }
+header.shell .cta:active{ transform:translateY(1px); }
+
+/* Botón ghost rojo (Salir) */
+header.shell .link-logout{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:var(--btn-h); padding:0 18px; border-radius:var(--nav-radius);
+  border:1px solid rgba(211,47,47,.35); background:#fff;
+  color:var(--nav-red); font-weight:800; cursor:pointer;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+header.shell .link-logout:hover{
+  border-color:var(--nav-red-700); color:var(--nav-red-700);
+  background:#fff5f5;
+}
+
+/* Usuario */
+header.shell .who{ color:var(--nav-muted); font-weight:700; }
+
+/* Carrito */
+header.shell .cart{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:40px; height:40px; border-radius:999px;
+  border:1px solid var(--nav-border); background:#fff; text-decoration:none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+header.shell .cart:hover{ border-color:var(--nav-red); box-shadow:0 6px 14px rgba(0,0,0,.06); }
+header.shell .cart img{ display:block; }
+
+/* ====== Responsive ====== */
+@media (max-width:1200px){
+  header.shell .nav-inner{ column-gap:36px; }
+  header.shell .links.links--center{ gap:22px; }
+}
+@media (max-width:992px){
+  header.shell .nav-inner{ height:72px; padding:0 24px; column-gap:28px; }
+  header.shell .brand-logo{ height:40px; }
+  header.shell .brand-name{ font-size:1.05rem; }
+  header.shell .links.links--center{ gap:18px; }
+}
+@media (max-width:760px){
+  header.shell .nav-inner{ height:64px; padding:0 16px; column-gap:16px; }
+  header.shell .brand-logo{ height:32px; }
+  header.shell .brand-name{ display:none; }
+  header.shell .links.links--center{ gap:12px; flex-wrap:wrap; }
+}

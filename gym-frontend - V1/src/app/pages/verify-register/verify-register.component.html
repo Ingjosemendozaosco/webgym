@@ -1,0 +1,35 @@
+<div class="verify-hero">
+  <div class="veil"></div>
+  <div class="verify-wrap">
+    <section class="verify-card">
+      <div class="head">
+        <div class="icon">✅</div>
+        <h1>Verificar registro</h1>
+        <p class="sub">Ingresa el código enviado a tu correo</p>
+      </div>
+
+      <form class="form" (ngSubmit)="submit()">
+        <div class="group">
+          <label>Correo</label>
+          <input type="email" [value]="email" name="email" placeholder="tu@correo.com" disabled />
+        </div>
+        <div class="group code-group">
+          <label>Código</label>
+          <div class="field-wrap">
+            <input [type]="showCode ? 'text' : 'password'" [(ngModel)]="code" name="code" maxlength="6" inputmode="numeric" placeholder="******" required autofocus />
+            <button type="button" class="eye" (click)="toggleShow()" [disabled]="loading" [attr.aria-pressed]="showCode" [title]="showCode ? 'Ocultar código' : 'Ver código'">
+              <span *ngIf="!showCode">👁️</span>
+              <span *ngIf="showCode">🙈</span>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn" [disabled]="loading">
+          <span class="glow"></span>
+          <span class="txt" [style.opacity]="loading ? 0 : 1">Confirmar</span>
+          <span class="loader" *ngIf="loading"></span>
+        </button>
+        <p class="msg">{{ msg }}</p>
+      </form>
+    </section>
+  </div>
+</div>

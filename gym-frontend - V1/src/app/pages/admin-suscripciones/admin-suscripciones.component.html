@@ -1,0 +1,175 @@
+<section class="page admin-suscripciones">
+  <app-admin-nav></app-admin-nav>
+  <h1>Suscripciones</h1>
+  <div class="tabs">
+    <button [class.active]="tab==='planes'" (click)="setTab('planes')">Planes</button>
+    <button [class.active]="tab==='membresias'" (click)="setTab('membresias')">Membresías</button>
+    <div class="spacer"></div>
+    <button class="primary" (click)="nuevo(tab==='planes' ? 'plan' : 'membresia')">Nuevo {{tab==='planes' ? 'plan' : 'membresía'}}</button>
+  </div>
+
+  <div *ngIf="!cargando" class="table-wrapper" [hidden]="tab!=='planes'">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Duración (días)</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of planes">
+          <td>{{p.id}}</td>
+          <td class="w">{{p.nombre}}</td>
+          <td>{{p.precio | currency:'PEN':'symbol-narrow'}}</td>
+          <td>{{p.duracionDias || '—'}}</td>
+          <td>{{p.tipo || '—'}}</td>
+          <td><span class="badge" [class.badge-success]="p.estado==='ACTIVO'" [class.badge-muted]="p.estado!=='ACTIVO'">{{p.estado}}</span></td>
+          <td class="actions">
+            <button type="button" (click)="editar('plan', p)">Editar</button>
+            <button type="button" class="danger" (click)="eliminar('plan', p)">Eliminar</button>
+            <button type="button" (click)="verSuscriptores('plan', p)">Ver suscriptores</button>
+          </td>
+        </tr>
+        <tr *ngIf="(planes||[]).length===0"><td colspan="7" class="muted">Sin planes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!cargando" class="table-wrapper" [hidden]="tab!=='membresias'">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Duración (días)</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of membresias">
+          <td>{{m.id}}</td>
+          <td class="w">{{m.nombre}}</td>
+          <td>{{m.precio | currency:'PEN':'symbol-narrow'}}</td>
+          <td>{{m.duracionDias}}</td>
+          <td>{{m.tipo}}</td>
+          <td><span class="badge" [class.badge-success]="m.estado==='ACTIVO'" [class.badge-muted]="m.estado!=='ACTIVO'">{{m.estado}}</span></td>
+          <td class="actions">
+            <button type="button" (click)="editar('membresia', m)">Editar</button>
+            <button type="button" class="danger" (click)="eliminar('membresia', m)">Eliminar</button>
+            <button type="button" (click)="verSuscriptores('membresia', m)">Ver suscriptores</button>
+          </td>
+        </tr>
+        <tr *ngIf="(membresias||[]).length===0"><td colspan="7" class="muted">Sin membresías.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div *ngIf="cargando" class="muted">Cargando…</div>
+
+  <!-- Modal crear/editar -->
+  <div class="modal-backdrop" *ngIf="modal" (click)="modal=false"></div>
+  <div class="modal" *ngIf="modal">
+    <div class="modal-header">
+      <h3>{{ editingId ? 'Editar' : 'Nuevo' }} {{ type==='plan' ? 'plan' : 'membresía' }}</h3>
+      <button class="close" type="button" (click)="modal=false">×</button>
+    </div>
+    <div class="modal-body" *ngIf="type==='plan'">
+      <label>Nombre<input [(ngModel)]="f.nombre"></label>
+      <label>Descripción<textarea rows="3" [(ngModel)]="f.descripcion"></textarea></label>
+      <label>Beneficio<textarea rows="3" [(ngModel)]="f.beneficio"></textarea></label>
+      <div class="grid2">
+        <label>Precio<input type="number" step="0.01" [(ngModel)]="f.precio"></label>
+        <label>Duración días<input type="number" [(ngModel)]="f.duracionDias"></label>
+      </div>
+      <div class="grid2">
+        <label>Tipo
+          <select [(ngModel)]="f.tipo">
+            <option value="DESCUENTO">DESCUENTO (aplica % de descuento)</option>
+            <option value="HORAS">HORAS (amplía horas de reserva)</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid2" *ngIf="f.tipo==='DESCUENTO'">
+        <label>Descuento %<input type="number" [(ngModel)]="f.descuentoPorcentaje"></label>
+      </div>
+      <div class="grid2" *ngIf="f.tipo==='HORAS'">
+        <label>Horas máx. reserva<input type="number" [(ngModel)]="f.horasMaxReserva"></label>
+        <label>Horas máx. por día<input type="number" [(ngModel)]="f.horasDiaMax"></label>
+      </div>
+      <div class="grid2" *ngIf="f.tipo==='HORAS'">
+        <label>Horas máx. por semana<input type="number" [(ngModel)]="f.horasSemanaMax"></label>
+      </div>
+      <label>Estado<select [(ngModel)]="f.estado"><option>ACTIVO</option><option>INACTIVO</option><option>SOLICITADO</option></select></label>
+    </div>
+    <div class="modal-body" *ngIf="type==='membresia'">
+      <label>Nombre<input [(ngModel)]="f.nombre"></label>
+      <div class="grid2">
+        <label>Precio<input type="number" step="0.01" [(ngModel)]="f.precio"></label>
+        <label>Duración días<input type="number" [(ngModel)]="f.duracionDias"></label>
+      </div>
+      <div class="grid2">
+        <label>Tipo<select [(ngModel)]="f.tipo"><option>PAGADA</option><option>FREE_TRIAL</option></select></label>
+        <label>Trial días<input type="number" [(ngModel)]="f.trialDias"></label>
+      </div>
+      <label>Descripción<textarea rows="3" [(ngModel)]="f.descripcion"></textarea></label>
+      <label>Beneficios<textarea rows="3" [(ngModel)]="f.beneficios"></textarea></label>
+      <label>Descuento %<input type="number" [(ngModel)]="f.descuentoPorcentaje"></label>
+      <label>Estado<select [(ngModel)]="f.estado"><option>ACTIVO</option><option>INACTIVO</option><option>SOLICITADO</option></select></label>
+    </div>
+    <div class="modal-footer">
+      <button type="button" (click)="modal=false">Cancelar</button>
+      <button type="button" class="primary" (click)="guardar()">Guardar</button>
+    </div>
+  </div>
+
+  <div class="toast" *ngIf="toast">{{toast}}</div>
+
+  <!-- Modal suscriptores -->
+  <div class="modal-backdrop" *ngIf="modalSubs" (click)="modalSubs=false"></div>
+  <div class="modal" *ngIf="modalSubs">
+    <div class="modal-header">
+      <h3>Suscriptores de {{subsDe?.tipo === 'plan' ? 'Plan' : 'Membresía'}} — {{subsDe?.nombre}}</h3>
+      <button class="close" type="button" (click)="modalSubs=false">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Estado</th>
+              <th>Inicio</th>
+              <th>Fin</th>
+              <th>Método</th>
+              <th>Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of subs">
+              <td>{{s.id}}</td>
+              <td>{{s.usuario?.email || s.usuarioId || '—'}}</td>
+              <td><span class="badge" [class.badge-success]="(s.estado||'').toString().toUpperCase().includes('CONF')" [class.badge-muted]="!(s.estado||'').toString().toUpperCase().includes('CONF')">{{s.estado}}</span></td>
+              <td>{{s.fechaInicio | date:'short'}}</td>
+              <td>{{s.fechaFin | date:'short'}}</td>
+              <td>{{s.metodoPago || '—'}}</td>
+              <td>{{s.monto | currency:'PEN':'symbol-narrow'}}</td>
+            </tr>
+            <tr *ngIf="(subs||[]).length===0"><td colspan="7" class="muted">Sin suscriptores.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" (click)="modalSubs=false">Cerrar</button>
+    </div>
+  </div>
+</section>

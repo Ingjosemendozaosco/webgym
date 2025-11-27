@@ -1,0 +1,52 @@
+<section class="home-hero">
+  <div class="hero-wrap">
+    <div class="hero-copy">
+      <h1>Tu progreso, nuestra misión</h1>
+      <p>Encuentra los mejores productos, planes y promociones para llevar tu entrenamiento al siguiente nivel.</p>
+      <div class="actions">
+        <a class="btn primary" routerLink="/productos">Ver productos</a>
+        <a class="btn ghost" routerLink="/membresias">Membresías</a>
+        <button *ngIf="isLoggedIn" class="btn enter" (click)="navigateToDashboard()">Entrar</button>
+      </div>
+    </div>
+    <div class="hero-media">
+      <div class="media-card">
+        <img src="https://images.unsplash.com/photo-1554284126-aa88f22d8b74?w=1600&auto=format&fit=crop&q=80" alt="AngelsGym"/>
+        <span class="badge">Hasta 40% OFF</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <div class="feature">
+      <div class="icon">💪</div>
+      <h3>Equipos de calidad</h3>
+      <p>Seleccionados para rendimiento y durabilidad.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">🪪</div>
+      <h3>Membresías flexibles</h3>
+      <p>Elige el plan que mejor se adapte a ti.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">⚡</div>
+      <h3>Promos semanales</h3>
+      <p>Descuentos y combos por tiempo limitado.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-wrap">
+    <div class="cta-text">
+      <h2>¿Listo para empezar?</h2>
+      <p>Explora nuestro catálogo y activa tu membresía hoy mismo.</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn white" routerLink="/productos">Explorar catálogo</a>
+    </div>
+  </div>
+  
+</section>

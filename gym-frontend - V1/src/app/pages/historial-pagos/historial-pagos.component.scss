@@ -1,0 +1,160 @@
+.page.historial-pagos {
+  padding: 1.5rem 1rem 2rem;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.head .muted {
+  font-size: .9rem;
+}
+
+.head .back {
+  margin-left: auto;
+  font-size: .85rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border-radius: .75rem;
+  border: 1px solid #e5e7eb;
+  padding: .85rem .9rem;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(15,23,42,.06);
+  overflow:hidden;
+  position:relative;
+}
+
+.card-inner {
+  display: flex;
+  gap: .75rem;
+}
+
+.thumb {
+  flex: 0 0 72px;
+  height: 72px;
+  border-radius: .75rem;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.body {
+  flex: 1;
+}
+
+.card.status-pendiente{
+  background:linear-gradient(135deg, #facc15, #0f172a);
+  border-color:#facc15;
+  color:#f9fafb;
+}
+
+.card.status-confirmado{
+  background:linear-gradient(135deg, #22c55e, #0f172a);
+  border-color:#22c55e;
+  color:#f9fafb;
+}
+
+.card.status-cancelado{
+  background:linear-gradient(135deg, #4b5563, #020617);
+  border-color:#ef4444;
+  color:#fee2e2;
+}
+
+.card.status-otro{
+  background:linear-gradient(180deg, #0f172a, #020617);
+  color:#f9fafb;
+}
+
+.row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .4rem;
+  font-size: .8rem;
+}
+
+.row-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.amount {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.label {
+  font-size: .8rem;
+  color: #e5e7eb;
+}
+
+.status .badge {
+  font-size: .8rem;
+}
+
+.row-actions{
+  margin-top:.35rem;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.btn-link{
+  border:0;
+  background:transparent;
+  color:#e5e7eb;
+  font-size:.8rem;
+  text-decoration:underline;
+  cursor:pointer;
+  padding:0;
+}
+
+.row-details{
+  margin-top:.35rem;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.row-details ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:grid;
+  gap:2px;
+}
+
+.row-details li{
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+  font-size:.8rem;
+}
+
+.row-details .prod-name{
+  font-weight:500;
+}
+
+.row-details .prod-qty{
+  opacity:.8;
+}
+
+.row-details .prod-price{
+  font-weight:600;
+}
