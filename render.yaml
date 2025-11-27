@@ -58,8 +58,8 @@ services:
   name: webgym-frontend
   rootDir: "gym-frontend - V1"
   # CORRECCIÓN CLAVE: Agregando el argumento --base-href /
-  buildCommand: npm install && npm run build -- --base-href / && cp -r dist/gym-frontend/browser/* dist/gym-frontend/ && ls -R dist
-  staticPublishPath: dist/gym-frontend/browser
+  buildCommand: npm install && npm run build -- --base-href / && cp -R dist/gym-frontend/browser/* dist/gym-frontend/
+  staticPublishPath: dist/gym-frontend
   routes:
     - type: rewrite
       source: /**
