@@ -59,4 +59,8 @@ services:
   rootDir: "gym-frontend - V1"
   # CORRECCIÓN CLAVE: Agregando el argumento --base-href /
   buildCommand: npm install && npm run build -- --base-href /
-  staticPublishPath: dist/gym-frontend
+  staticPublishPath: dist/gym-frontend/browser
+  routes:
+    - type: rewrite
+      source: /**
+      destination: /index.html
