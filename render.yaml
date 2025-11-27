@@ -54,9 +54,10 @@ services:
       - key: FRONTEND_URL
         sync: false
 
-  - type: static_site
+  - type: web
     name: webgym-frontend
     rootDir: "gym-frontend - V1"
+    runtime: static
     plan: free
     buildCommand: npm install && npm run build
     staticPublishPath: dist/gym-frontend/browser
