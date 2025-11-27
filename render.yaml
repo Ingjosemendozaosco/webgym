@@ -58,4 +58,4 @@ services:
     rootDir: "gym-frontend - V1"
     runtime: static
     buildCommand: npm install && npm run build
-    staticPublishPath: "gym-frontend - V1/dist/gym-frontend"
+    staticPublishPath: "dist/gym-frontend"
