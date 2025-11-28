@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.backendgym.security.JwtAuthenticationFilter;
 
 // **IMPORT NECESARIO PARA LEER LA VARIABLE DE ENTORNO**
-import org.springframework.beans.factory.annotation.Value; 
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @EnableWebSecurity
@@ -32,110 +32,110 @@ public class SecurityConfig {
     // **PASO 1: INYECTAR LA VARIABLE DE ENTORNO FRONTEND_URL**
     // Spring leerá el valor de FRONTEND_URL de las variables de entorno de Render
     @Value("${FRONTEND_URL}")
-    private String frontendUrl; 
+    private String frontendUrl;
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(Customizer.withDefaults())
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/auth/register-init",
-                    "/api/auth/register-confirm",
-                    "/api/auth/login",
-                    "/api/auth/login-init",
-                    "/api/auth/login-confirm",
-                    "/api/auth/recover-init",
-                    "/api/auth/recover-confirm",
-                    "/api/auth/recover-validate"
-                ).permitAll()
-                // Públicos de lectura
-                .requestMatchers(HttpMethod.GET,
-                        "/api/productos/**",
-                        "/api/promociones/**",
-                        "/api/reservas/filtros/uso",
-                        "/api/reservas/productos"
-                ).permitAll()
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(Customizer.withDefaults())
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/api/auth/register-init",
+                    "/api/auth/register-confirm",
+                    "/api/auth/login",
+                    "/api/auth/login-init",
+                    "/api/auth/login-confirm",
+                    "/api/auth/recover-init",
+                    "/api/auth/recover-confirm",
+                    "/api/auth/recover-validate"
+                ).permitAll()
+                // Públicos de lectura
+                .requestMatchers(HttpMethod.GET,
+                        "/api/productos/**",
+                        "/api/promociones/**",
+                        "/api/reservas/filtros/uso",
+                        "/api/reservas/productos"
+                ).permitAll()
 
-                // Mercado Pago: permitir temporalmente para pruebas
-                .requestMatchers("/api/pagos/mercadopago/**").permitAll()
+                // Mercado Pago: permitir temporalmente para pruebas
+                .requestMatchers("/api/pagos/mercadopago/**").permitAll()
 
-                // Administración de pagos/pedidos
-                .requestMatchers("/api/pagos/admin/**").hasAnyRole("TRABAJADOR", "ADMIN")
+                // Administración de pagos/pedidos
+                .requestMatchers("/api/pagos/admin/**").hasAnyRole("TRABAJADOR", "ADMIN")
 
-                // Check-in por QR: solo trabajador o admin
-                .requestMatchers("/api/checkin/**").hasAnyRole("TRABAJADOR", "ADMIN")
+                // Check-in por QR: solo trabajador o admin
+                .requestMatchers("/api/checkin/**").hasAnyRole("TRABAJADOR", "ADMIN")
 
-                // Usuario autenticado (USUARIO/TRABAJADOR/ADMIN)
-                .requestMatchers(
-                        "/api/dashboard/**",
-                        "/api/carrito/**",
-                        "/api/pagos/**",
-                        "/api/reservas/**",
-                        "/api/membresias/**",
-                        "/api/planes/**",
-                        "/api/consultas/**",
-                        "/api/perfil/**"
-                ).hasAnyRole("USUARIO", "TRABAJADOR", "ADMIN")
+                // Usuario autenticado (USUARIO/TRABAJADOR/ADMIN)
+                .requestMatchers(
+                        "/api/dashboard/**",
+                        "/api/carrito/**",
+                        "/api/pagos/**",
+                        "/api/reservas/**",
+                        "/api/membresias/**",
+                        "/api/planes/**",
+                        "/api/consultas/**",
+                        "/api/perfil/**"
+                ).hasAnyRole("USUARIO", "TRABAJADOR", "ADMIN")
 
-                // Gestión de productos y promociones (solo TRABAJADOR o ADMIN)
-                .requestMatchers(HttpMethod.POST, "/api/productos/**", "/api/promociones/**").hasAnyRole("TRABAJADOR", "ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/productos/**", "/api/promociones/**").hasAnyRole("TRABAJADOR", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/productos/**", "/api/promociones/**").hasAnyRole("TRABAJADOR", "ADMIN")
+                // Gestión de productos y promociones (solo TRABAJADOR o ADMIN)
+                .requestMatchers(HttpMethod.POST, "/api/productos/**", "/api/promociones/**").hasAnyRole("TRABAJADOR", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/productos/**", "/api/promociones/**").hasAnyRole("TRABAJADOR", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/productos/**", "/api/promociones/**").hasAnyRole("TRABAJADOR", "ADMIN")
 
-                // Responder consultas: trabajador o admin
-                .requestMatchers(HttpMethod.POST, "/api/consultas/*/responder").hasAnyRole("TRABAJADOR", "ADMIN")
+                // Responder consultas: trabajador o admin
+                .requestMatchers(HttpMethod.POST, "/api/consultas/*/responder").hasAnyRole("TRABAJADOR", "ADMIN")
 
-                .anyRequest().authenticated()
-            )
-            .httpBasic(AbstractHttpConfigurer::disable)
-            .formLogin(AbstractHttpConfigurer::disable)
-            .exceptionHandling(e -> e.authenticationEntryPoint((req, res, ex) -> {
-                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                res.setContentType("application/json");
-                res.getWriter().write("{\"error\":\"unauthorized\"}");
-            }))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .anyRequest().authenticated()
+            )
+            .httpBasic(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .exceptionHandling(e -> e.authenticationEntryPoint((req, res, ex) -> {
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                res.setContentType("application/json");
+                res.getWriter().write("{\"error\":\"unauthorized\"}");
+            }))
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+        return http.build();
+    }
 
     // **PASO 2: USAR LA VARIABLE INYECTADA EN CORS**
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        
-        // Crear una lista mutable a partir de los patrones fijos
-        List<String> allowedOrigins = new ArrayList<>(List.of(
-                "http://localhost:4200",
-                "https://*.ngrok.app",
-                "https://*.loca.lt"
-        ));
-        
-        // Añadir la URL de Render (inyectada por @Value) a la lista. 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        // Crear una lista mutable a partir de los patrones fijos
+        List<String> allowedOrigins = new ArrayList<>(List.of(
+                "http://localhost:4200",
+                "https://*.ngrok.app",
+                "https://*.loca.lt"
+        ));
+
+        // Añadir la URL de Render (inyectada por @Value) a la lista.
         // Se elimina la barra final si existe para asegurar la coincidencia.
         if (frontendUrl != null && !frontendUrl.isEmpty()) {
             String finalUrl = frontendUrl.endsWith("/") ? frontendUrl.substring(0, frontendUrl.length() - 1) : frontendUrl;
             allowedOrigins.add(finalUrl);
         }
-        
-        config.setAllowedOriginPatterns(allowedOrigins);
-        
-        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+
+        config.setAllowedOriginPatterns(allowedOrigins);
+
+        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 }
